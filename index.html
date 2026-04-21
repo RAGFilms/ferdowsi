@@ -1,0 +1,2734 @@
+<!DOCTYPE html>
+<!-- ============================================================
+     FERDOWSI — The Story Master
+     © AGW_Entertainment. All rights reserved.
+     ============================================================ -->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="author" content="AGW_Entertainment">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ferdowsi — The Story Master</title>
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#060606;--sur:#0e0e0e;--sur2:#151515;--sur3:#1c1c1c;
+  --bor:#222;--bor2:#333;--txt:#e0dbd2;--txt2:#888480;--txt3:#464340;
+  --acc:#bb3015;--acc2:#7a1f0d;--accg:#bb301520;
+  --gold:#b89640;--gold2:#7a6428;
+  --grn:#26623a;--grntxt:#44a86a;
+  --blu:#1a4888;--blutxt:#4a8adf;
+}
+body{background:var(--bg);color:var(--txt);font-family:'Courier New',monospace;min-height:100vh;overflow-x:hidden}
+
+/* ── HEADER ── */
+.hdr{display:flex;align-items:center;gap:0;border-bottom:1px solid var(--bor);background:var(--sur);height:54px;position:sticky;top:0;z-index:100}
+.logo-btn{display:flex;align-items:center;gap:12px;padding:0 20px;height:100%;cursor:pointer;border-right:1px solid var(--bor);transition:background .2s;flex-shrink:0}
+.logo-btn:hover{background:var(--sur2)}
+.logo-mark{font-family:Georgia,serif;font-size:22px;letter-spacing:.12em;color:var(--txt);text-transform:uppercase;line-height:1}
+.logo-mark span{color:var(--acc)}
+.logo-sub{font-size:9px;color:var(--txt3);letter-spacing:.28em;text-transform:uppercase}
+.proj-indicator{flex:1;display:flex;align-items:center;gap:12px;padding:0 20px;min-width:0}
+.proj-name{font-family:Georgia,serif;font-size:16px;color:var(--txt);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.proj-format{font-size:9px;letter-spacing:.22em;color:var(--txt3);text-transform:uppercase;flex-shrink:0}
+.hdr-right{display:flex;align-items:center;gap:2px;padding-right:12px;flex-shrink:0}
+.hdr-btn{background:none;border:1px solid transparent;color:var(--txt3);font-family:'Courier New',monospace;font-size:10px;letter-spacing:.15em;text-transform:uppercase;padding:6px 12px;cursor:pointer;transition:all .2s;white-space:nowrap}
+.hdr-btn:hover{border-color:var(--bor2);color:var(--txt2)}
+.drive-btn{display:flex;align-items:center;gap:7px}
+.drive-dot{width:7px;height:7px;border-radius:50%;background:var(--txt3);flex-shrink:0;transition:background .3s}
+.drive-dot.connected{background:var(--grntxt)}
+.drive-dot.syncing{background:var(--gold);animation:pulse 1s infinite}
+.drive-dot.error{background:var(--acc)}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+
+/* ── PROJECT PANEL ── */
+/* ── PROJECT DASHBOARD ── */
+#proj-panel{position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:200;display:none;backdrop-filter:blur(3px)}
+#proj-panel.show{display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:48px 20px 20px;overflow-y:auto}
+.proj-panel-inner{background:var(--sur);border:1px solid var(--bor2);width:100%;max-width:1100px;display:flex;flex-direction:column}
+.pp-header{display:flex;align-items:center;justify-content:space-between;padding:18px 24px;border-bottom:1px solid var(--bor);flex-shrink:0}
+.pp-title{font-family:Georgia,serif;font-size:20px;letter-spacing:.08em;text-transform:uppercase}
+.pp-actions{display:flex;gap:8px;align-items:center}
+/* NEW button in header */
+.hdr-new-btn{background:var(--acc2);border:1px solid var(--acc);color:var(--txt);font-family:'Courier New',monospace;font-size:11px;letter-spacing:.15em;text-transform:uppercase;padding:7px 18px;cursor:pointer;transition:all .2s;white-space:nowrap}
+.hdr-new-btn:hover{background:var(--acc)}
+/* Current project strip */
+.pp-current{padding:16px 24px;border-bottom:1px solid var(--bor);background:var(--sur2);display:flex;align-items:center;gap:20px;flex-wrap:wrap}
+.pp-current-label{font-size:9px;letter-spacing:.28em;color:var(--txt3);text-transform:uppercase;flex-shrink:0}
+.pp-current-name{font-family:Georgia,serif;font-size:18px;color:var(--txt)}
+.pp-current-meta{font-size:11px;color:var(--txt3)}
+.pp-current-actions{display:flex;gap:8px;margin-left:auto}
+/* Medium selector */
+.pp-medium-section{padding:18px 24px;border-bottom:1px solid var(--bor)}
+.pp-section-label{font-size:9px;letter-spacing:.28em;color:var(--txt3);text-transform:uppercase;margin-bottom:12px}
+.medium-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:6px}
+.medium-btn{background:var(--sur2);border:1px solid var(--bor);color:var(--txt2);font-family:'Courier New',monospace;cursor:pointer;padding:14px 10px;text-align:center;transition:all .2s;display:flex;flex-direction:column;align-items:center;gap:6px}
+.medium-btn:hover{border-color:var(--bor2);background:var(--sur3)}
+.medium-btn.on{border-color:var(--acc);background:var(--accg);color:var(--txt)}
+.medium-icon{font-size:22px;line-height:1}
+.medium-name{font-size:10px;letter-spacing:.15em;text-transform:uppercase}
+/* Project grid */
+.pp-projects-section{padding:16px 24px}
+.proj-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:4px}
+.proj-card{background:var(--sur2);border:1px solid var(--bor);padding:16px 18px;cursor:pointer;transition:all .2s;position:relative}
+.proj-card:hover{border-color:var(--bor2)}
+.proj-card.active{border-color:var(--acc);background:var(--accg)}
+.pc-name{font-family:Georgia,serif;font-size:16px;color:var(--txt);margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pc-format{font-size:9px;letter-spacing:.2em;color:var(--txt3);text-transform:uppercase;margin-bottom:6px}
+.pc-logline{font-size:11px;color:var(--txt2);line-height:1.4;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;margin-bottom:8px}
+.pc-meta{display:flex;align-items:center;gap:8px;font-size:10px;color:var(--txt3)}
+.pc-actions{position:absolute;top:10px;right:10px;display:flex;gap:3px;opacity:0;transition:opacity .2s}
+.proj-card:hover .pc-actions{opacity:1}
+.pc-act-btn{background:none;border:1px solid var(--bor);color:var(--txt3);font-family:'Courier New',monospace;font-size:9px;padding:3px 7px;cursor:pointer;transition:all .2s}
+.pc-act-btn:hover{border-color:var(--bor2);color:var(--txt2)}
+.pc-act-btn.danger:hover{border-color:var(--acc2);color:var(--acc)}
+/* Save warning modal */
+.warn-modal{background:var(--sur);border:1px solid var(--acc2);width:100%;max-width:480px;padding:28px}
+.warn-modal-title{font-family:Georgia,serif;font-size:18px;color:var(--txt);margin-bottom:8px}
+.warn-modal-msg{font-size:12px;color:var(--txt2);line-height:1.7;margin-bottom:8px}
+.warn-modal-irrev{font-size:11px;color:var(--acc);letter-spacing:.1em;text-transform:uppercase;padding:8px 12px;border:1px solid var(--acc2);background:rgba(187,48,21,.08);margin-bottom:20px}
+.warn-modal-btns{display:flex;gap:8px;justify-content:flex-end}
+
+/* ── MODALS ── */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:300;display:none;align-items:center;justify-content:center;backdrop-filter:blur(2px)}
+.modal-overlay.show{display:flex}
+.modal{background:var(--sur);border:1px solid var(--bor2);width:100%;max-width:560px;max-height:88vh;overflow-y:auto;padding:28px}
+.modal.wide{max-width:720px}
+.modal-title{font-family:Georgia,serif;font-size:20px;letter-spacing:.08em;text-transform:uppercase;margin-bottom:20px;padding-bottom:14px;border-bottom:1px solid var(--bor)}
+.modal-footer{display:flex;gap:8px;justify-content:flex-end;margin-top:20px;padding-top:16px;border-top:1px solid var(--bor)}
+.setup-guide{background:var(--sur2);border:1px solid var(--bor);padding:14px 16px;margin-top:10px;font-size:11px;line-height:1.7;color:var(--txt2)}
+.setup-guide code{color:var(--gold);font-size:11px}
+.setup-guide summary{cursor:pointer;color:var(--txt3);letter-spacing:.15em;text-transform:uppercase;font-size:10px;margin-bottom:8px}
+
+/* ── TABS ── */
+.tabs{display:flex;border-bottom:1px solid var(--bor);background:var(--sur);padding:0 28px;overflow-x:auto}
+.tab{padding:10px 16px;font-size:10px;letter-spacing:.2em;text-transform:uppercase;cursor:pointer;color:var(--txt3);border-bottom:2px solid transparent;transition:all .2s;background:none;border-top:none;border-left:none;border-right:none;font-family:'Courier New',monospace;white-space:nowrap}
+.tab:hover{color:var(--txt2)}
+.tab.on{color:var(--acc);border-bottom-color:var(--acc)}
+
+/* ── MAIN ── */
+.main{padding:22px 28px;max-width:1500px}
+
+/* ── FORMS ── */
+.fg{display:flex;flex-direction:column;gap:4px}
+.fg.full{grid-column:1/-1}
+.fl{font-size:10px;letter-spacing:.2em;color:var(--txt3);text-transform:uppercase}
+.fi{background:var(--sur2);border:1px solid var(--bor);color:var(--txt);font-family:'Courier New',monospace;font-size:12px;padding:6px 9px;resize:vertical;width:100%;transition:border-color .2s}
+.fi:focus{outline:none;border-color:var(--acc2)}
+.fi::placeholder{color:var(--txt3)}
+textarea.fi{min-height:65px;line-height:1.5}
+select.fi{cursor:pointer}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:10px}
+.row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-top:10px}
+
+/* ── BUTTONS ── */
+.bghost{background:none;border:1px solid var(--bor);color:var(--txt3);font-family:'Courier New',monospace;font-size:10px;letter-spacing:.15em;text-transform:uppercase;padding:7px 14px;cursor:pointer;transition:all .2s}
+.bghost:hover{border-color:var(--bor2);color:var(--txt2)}
+.bsolid{background:var(--acc2);border:1px solid var(--acc);color:var(--txt);font-family:'Courier New',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;padding:8px 16px;cursor:pointer;transition:all .2s}
+.bsolid:hover{background:var(--acc)}
+.bsolid:disabled{opacity:.4;cursor:not-allowed}
+.bdrive{background:#0f3060;border:1px solid var(--blu);color:var(--blutxt);font-family:'Courier New',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;padding:8px 16px;cursor:pointer;transition:all .2s}
+.bdrive:hover{background:#163878}
+
+/* ── SECTION TITLE ── */
+.stitle{font-size:10px;letter-spacing:.28em;text-transform:uppercase;color:var(--txt3);margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid var(--bor);display:flex;align-items:center;justify-content:space-between}
+
+/* ── BUDGET BAR ── */
+.bbar{background:var(--sur);border:1px solid var(--bor);padding:11px 16px;margin-bottom:18px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.blbl{font-size:10px;letter-spacing:.18em;color:var(--txt3);text-transform:uppercase;white-space:nowrap}
+.btrack{flex:1;height:4px;background:var(--sur3);min-width:120px}
+.bfill{height:100%;background:var(--acc);transition:width .3s}
+.bfill.over{background:#c07820}
+.bnum{font-size:18px;color:var(--txt);white-space:nowrap}
+.bnum small{font-size:11px;color:var(--txt3)}
+
+/* ── CHARACTERS ── */
+.char-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:2px}
+.char-card{background:var(--sur);border:1px solid var(--bor);cursor:pointer;transition:border-color .2s}
+.char-card:hover{border-color:var(--bor2)}
+.char-card.exp{border-color:var(--acc2);grid-column:1/-1}
+.cc-hdr{padding:13px 16px;display:flex;align-items:center;gap:11px}
+.cc-info{flex:1;min-width:0}
+.cc-name{font-size:13px;color:var(--txt);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cc-name.empty{color:var(--txt3);font-style:italic}
+.cc-role{font-size:10px;color:var(--txt3);margin-top:2px;letter-spacing:.1em}
+.cc-arc{font-size:10px;color:var(--txt3);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:220px}
+.cc-status{font-size:9px;letter-spacing:.12em;padding:2px 7px;text-transform:uppercase;flex-shrink:0;border:1px solid var(--bor);color:var(--txt3)}
+.cc-exp{padding:0 16px 16px;border-top:1px solid var(--bor)}
+.cc-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-top:12px}
+
+/* ── STRUCTURE ── */
+.slist{display:flex;flex-direction:column;gap:2px}
+.sblock{background:var(--sur);border:1px solid var(--bor)}
+.s-hdr{padding:12px 18px;display:flex;align-items:center;gap:14px;cursor:pointer}
+.s-num{font-size:10px;letter-spacing:.22em;color:var(--txt3);text-transform:uppercase;width:54px;flex-shrink:0}
+.s-tw{flex:1}
+.s-title{font-family:Georgia,serif;font-size:16px;color:var(--txt)}
+.s-desc{font-size:11px;color:var(--txt3);margin-top:2px}
+.s-unit{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.sinput{background:var(--sur2);border:1px solid var(--bor);color:var(--txt);font-family:'Courier New',monospace;font-size:14px;padding:4px 7px;width:58px;text-align:center}
+.sinput:focus{outline:none;border-color:var(--acc2)}
+.s-body{padding:0 18px 16px;border-top:1px solid var(--bor);display:none}
+.s-body.open{display:block}
+.scene-list{margin-top:10px;display:flex;flex-direction:column;gap:5px}
+.scene-item{background:var(--sur2);border:1px solid var(--bor);padding:9px 12px;display:grid;grid-template-columns:1fr 1fr auto;gap:8px;align-items:start}
+.scene-full{grid-column:1/-1}
+.sdel{background:none;border:none;color:var(--txt3);cursor:pointer;font-size:16px;padding:0 3px;align-self:center}
+.sdel:hover{color:var(--acc)}
+
+/* ── STORYBOARD ── */
+.sbtb{display:flex;align-items:center;gap:9px;margin-bottom:12px;flex-wrap:wrap;background:var(--sur);border:1px solid var(--bor);padding:10px 14px}
+.sbbtn{background:none;border:1px solid var(--bor);color:var(--txt3);font-family:'Courier New',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;padding:4px 9px;cursor:pointer;transition:all .2s}
+.sbbtn:hover,.sbbtn.on{border-color:var(--acc2);color:var(--txt);background:var(--sur2)}
+.sbsep{width:1px;height:20px;background:var(--bor)}
+.sb-wrap{background:var(--sur);border:1px solid var(--bor);display:flex;justify-content:center;padding:14px;overflow:auto}
+#sb-canvas{background:#fff;cursor:crosshair;display:block}
+.sbpgs{display:flex;gap:6px;margin-top:9px;align-items:center;flex-wrap:wrap}
+.sbthumb{width:54px;height:38px;border:1px solid var(--bor);cursor:pointer;object-fit:cover;background:var(--sur2);opacity:.55;transition:all .2s;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:9px;color:var(--txt3)}
+.sbthumb.on{border-color:var(--acc);opacity:1}
+.sbthumb img{width:100%;height:100%;object-fit:cover}
+.sbadd{width:54px;height:38px;border:1px dashed var(--bor);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--txt3);font-size:18px;transition:all .2s;flex-shrink:0}
+.sbadd:hover{border-color:var(--acc2);color:var(--txt)}
+.rwrap{display:flex;gap:7px;align-items:center}
+.rval{font-size:11px;color:var(--txt2);min-width:22px;text-align:right}
+input[type=range]{flex:1;accent-color:var(--acc)}
+
+/* ── BIBLE CHECK ── */
+.bc-layout{display:grid;grid-template-columns:260px 1fr;gap:2px;min-height:600px}
+.bc-summary{background:var(--sur);border:1px solid var(--bor);padding:20px;display:flex;flex-direction:column;gap:14px}
+.bc-score-ring{text-align:center;padding:10px 0}
+.bc-score-num{font-family:Georgia,serif;font-size:44px;color:var(--txt);line-height:1}
+.bc-score-label{font-size:10px;letter-spacing:.22em;color:var(--txt3);text-transform:uppercase;margin-top:4px}
+.bc-score-bar{height:5px;background:var(--sur3);margin-top:8px;border-radius:2px;overflow:hidden}
+.bc-score-fill{height:100%;border-radius:2px;transition:width .4s}
+.bc-counter-row{display:flex;gap:8px}
+.bc-counter{flex:1;background:var(--sur2);border:1px solid var(--bor);padding:10px 8px;text-align:center}
+.bc-counter-num{font-size:22px;font-family:Georgia,serif}
+.bc-counter-lbl{font-size:9px;letter-spacing:.18em;color:var(--txt3);text-transform:uppercase;margin-top:2px}
+.bc-counter.err .bc-counter-num{color:#e05050}
+.bc-counter.warn .bc-counter-num{color:#c89030}
+.bc-counter.info .bc-counter-num{color:var(--blutxt)}
+.bc-counter.ok .bc-counter-num{color:var(--grntxt)}
+.bc-completeness{margin-top:4px}
+.bc-comp-row{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.bc-comp-label{font-size:10px;color:var(--txt3);width:90px;flex-shrink:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bc-comp-track{flex:1;height:4px;background:var(--sur3);border-radius:2px;overflow:hidden}
+.bc-comp-fill{height:100%;border-radius:2px;background:var(--grntxt);transition:width .3s}
+.bc-comp-pct{font-size:10px;color:var(--txt3);min-width:28px;text-align:right}
+.bc-results{background:var(--sur);border:1px solid var(--bor);overflow-y:auto;display:flex;flex-direction:column}
+.bc-results-hdr{padding:14px 18px;border-bottom:1px solid var(--bor);display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.bc-results-title{font-size:10px;letter-spacing:.22em;color:var(--txt3);text-transform:uppercase}
+.bc-cat-section{border-bottom:1px solid var(--bor)}
+.bc-cat-hdr{padding:10px 18px;background:var(--sur2);display:flex;align-items:center;gap:10px;cursor:pointer;transition:background .15s}
+.bc-cat-hdr:hover{background:var(--sur3)}
+.bc-cat-name{flex:1;font-size:11px;color:var(--txt);letter-spacing:.1em;text-transform:uppercase}
+.bc-cat-badge{font-size:9px;padding:2px 7px;letter-spacing:.1em;text-transform:uppercase}
+.bc-cat-badge.err{background:rgba(200,60,60,.15);color:#e05050;border:1px solid rgba(200,60,60,.3)}
+.bc-cat-badge.warn{background:rgba(200,144,48,.12);color:#c89030;border:1px solid rgba(200,144,48,.25)}
+.bc-cat-badge.info{background:rgba(74,138,223,.12);color:var(--blutxt);border:1px solid rgba(74,138,223,.25)}
+.bc-cat-badge.ok{background:rgba(68,168,106,.12);color:var(--grntxt);border:1px solid rgba(68,168,106,.25)}
+.bc-issues-list{padding:8px 0;display:none}
+.bc-issues-list.open{display:block}
+.bc-issue{padding:8px 18px;display:flex;align-items:flex-start;gap:10px;border-bottom:1px solid var(--bor);transition:background .15s}
+.bc-issue:hover{background:var(--sur2)}
+.bc-issue:last-child{border-bottom:none}
+.bc-issue-icon{font-size:12px;flex-shrink:0;margin-top:1px}
+.bc-issue-msg{flex:1;font-size:11px;color:var(--txt2);line-height:1.5}
+.bc-issue-fix{background:none;border:1px solid var(--bor);color:var(--txt3);font-family:'Courier New',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;padding:3px 8px;cursor:pointer;transition:all .2s;flex-shrink:0;white-space:nowrap}
+.bc-issue-fix:hover{border-color:var(--acc2);color:var(--txt)}
+.bc-empty{padding:14px 18px;font-size:11px;color:var(--grntxt);display:flex;align-items:center;gap:8px}
+.bc-all-clear{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;color:var(--grntxt);font-size:13px;letter-spacing:.1em;text-transform:uppercase}
+.bc-all-clear-icon{font-size:36px}
+
+/* ── NOTES ── */
+.narea{display:grid;grid-template-columns:1fr 1fr;gap:2px}
+.nblock{background:var(--sur);border:1px solid var(--bor);padding:16px}
+.nblock.full{grid-column:1/-1}
+.ntitle{font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--txt3);margin-bottom:8px}
+textarea.ni{background:var(--sur2);border:1px solid var(--bor);color:var(--txt);font-family:'Courier New',monospace;font-size:12px;line-height:1.7;padding:9px;width:100%;resize:vertical;min-height:150px}
+textarea.ni:focus{outline:none;border-color:var(--acc2)}
+
+/* ── CHAR IMAGE ── */
+.cc-avatar{width:38px;height:38px;background:var(--sur3);border:1px solid var(--bor);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;font-family:Georgia,serif;color:var(--txt2);overflow:hidden;cursor:pointer;transition:border-color .2s}
+.cc-avatar:hover{border-color:var(--acc2)}
+.cc-avatar img{width:100%;height:100%;object-fit:cover;display:block}
+.char-img-area{display:flex;gap:16px;align-items:flex-start;grid-column:1/-1;padding-bottom:14px;margin-bottom:4px;border-bottom:1px solid var(--bor)}
+.char-img-frame{width:130px;height:160px;background:var(--sur3);border:1px solid var(--bor);flex-shrink:0;overflow:hidden;position:relative;cursor:pointer;transition:border-color .2s}
+.char-img-frame:hover{border-color:var(--acc2)}
+.char-img-frame img{width:100%;height:100%;object-fit:cover;display:block}
+.char-img-empty{width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;color:var(--txt3)}
+.char-img-empty div{font-size:22px}
+.char-img-empty span{font-size:9px;letter-spacing:.12em;text-transform:uppercase}
+.char-img-btns{display:flex;flex-direction:column;gap:6px;padding-top:2px}
+
+/* ── LOCATIONS ── */
+.loc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:2px}
+.loc-card{background:var(--sur);border:1px solid var(--bor);cursor:pointer;transition:border-color .2s}
+.loc-card:hover{border-color:var(--bor2)}
+.loc-card.exp{border-color:var(--acc2);grid-column:1/-1}
+.loc-cover{height:110px;background:var(--sur3);position:relative;overflow:hidden;border-bottom:1px solid var(--bor)}
+.loc-cover img{width:100%;height:100%;object-fit:cover;display:block;transition:opacity .2s}
+.loc-card:hover .loc-cover img{opacity:.9}
+.loc-cover-ph{width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:var(--txt3);font-size:26px}
+.loc-cover-add{position:absolute;bottom:6px;right:6px;background:rgba(0,0,0,.75);border:1px solid var(--bor2);color:var(--txt2);font-family:'Courier New',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;padding:3px 8px;cursor:pointer;transition:all .2s;opacity:0}
+.loc-card:hover .loc-cover-add{opacity:1}
+.loc-cover-add:hover{border-color:var(--acc2);color:var(--txt)}
+.loc-info{padding:11px 14px}
+.loc-name{font-size:13px;color:var(--txt);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.loc-name.empty{color:var(--txt3);font-style:italic}
+.loc-type{font-size:10px;color:var(--txt3);margin-top:2px;letter-spacing:.08em}
+.loc-exp{padding:0 16px 16px;border-top:1px solid var(--bor)}
+.loc-img-strip{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid var(--bor)}
+.loc-img-thumb{width:96px;height:68px;border:1px solid var(--bor);position:relative;overflow:hidden;flex-shrink:0;cursor:pointer}
+.loc-img-thumb img{width:100%;height:100%;object-fit:cover;display:block;transition:opacity .2s}
+.loc-img-thumb:hover img{opacity:.8}
+.loc-img-del{position:absolute;top:3px;right:3px;background:rgba(0,0,0,.78);border:none;color:#ddd;cursor:pointer;font-size:11px;width:18px;height:18px;display:flex;align-items:center;justify-content:center;transition:background .2s;line-height:1}
+.loc-img-del:hover{background:var(--acc)}
+.loc-img-add{width:96px;height:68px;border:1px dashed var(--bor);display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;color:var(--txt3);transition:all .2s;flex-shrink:0;gap:3px}
+.loc-img-add:hover{border-color:var(--acc2);color:var(--txt2)}
+.loc-img-add span{font-size:9px;letter-spacing:.1em;text-transform:uppercase}
+.loc-grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+
+/* ── VEHICLES / WEAPONS ── */
+.asset-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:2px}
+.asset-card{background:var(--sur);border:1px solid var(--bor);cursor:pointer;transition:border-color .2s}
+.asset-card:hover{border-color:var(--bor2)}
+.asset-card.exp{border-color:var(--acc2);grid-column:1/-1}
+.asset-cover{height:100px;background:var(--sur3);position:relative;overflow:hidden;border-bottom:1px solid var(--bor)}
+.asset-cover img{width:100%;height:100%;object-fit:cover;display:block;transition:opacity .2s}
+.asset-card:hover .asset-cover img{opacity:.88}
+.asset-cover-ph{width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:var(--txt3);font-size:28px}
+.asset-cover-add{position:absolute;bottom:5px;right:5px;background:rgba(0,0,0,.78);border:1px solid var(--bor2);color:var(--txt2);font-family:'Courier New',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;padding:3px 7px;cursor:pointer;transition:all .2s;opacity:0}
+.asset-card:hover .asset-cover-add{opacity:1}
+.asset-cover-add:hover{border-color:var(--acc2);color:var(--txt)}
+.asset-info{padding:10px 13px;pointer-events:none}
+.asset-name{font-size:13px;color:var(--txt);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.asset-name.empty{color:var(--txt3);font-style:italic}
+.asset-type{font-size:10px;color:var(--txt3);margin-top:2px;letter-spacing:.08em}
+.asset-exp{padding:0 16px 16px;border-top:1px solid var(--bor)}
+.asset-img-strip{display:flex;gap:5px;flex-wrap:wrap;margin:12px 0;padding-bottom:12px;border-bottom:1px solid var(--bor)}
+.asset-img-thumb{width:90px;height:60px;border:1px solid var(--bor);position:relative;overflow:hidden;flex-shrink:0;cursor:pointer}
+.asset-img-thumb img{width:100%;height:100%;object-fit:cover;display:block;transition:opacity .2s}
+.asset-img-thumb:hover img{opacity:.8}
+.asset-img-del{position:absolute;top:2px;right:2px;background:rgba(0,0,0,.78);border:none;color:#ddd;cursor:pointer;font-size:11px;width:17px;height:17px;display:flex;align-items:center;justify-content:center;line-height:1}
+.asset-img-del:hover{background:var(--acc)}
+.asset-img-add{width:90px;height:60px;border:1px dashed var(--bor);display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;color:var(--txt3);transition:all .2s;flex-shrink:0;gap:2px}
+.asset-img-add:hover{border-color:var(--acc2);color:var(--txt2)}
+.asset-img-add span{font-size:9px;letter-spacing:.1em;text-transform:uppercase}
+
+/* ── STORYBOARD PANEL ANNOTATIONS ── */
+.sb-annotations{margin-top:14px;display:flex;flex-direction:column;gap:2px}
+.sb-panel-row{background:var(--sur);border:1px solid var(--bor);display:grid;gap:0}
+.sb-panel-hdr{padding:8px 14px;background:var(--sur2);border-bottom:1px solid var(--bor);display:flex;align-items:center;gap:12px}
+.sb-panel-num{font-size:10px;letter-spacing:.22em;color:var(--acc);text-transform:uppercase;font-weight:bold;min-width:60px}
+.sb-panel-cam{flex:1;background:transparent;border:none;color:var(--txt2);font-family:'Courier New',monospace;font-size:11px;outline:none;padding:0}
+.sb-panel-cam::placeholder{color:var(--txt3)}
+.sb-panel-body{display:grid;grid-template-columns:1fr 1fr;gap:0}
+.sb-panel-cell{padding:8px 12px;border-right:1px solid var(--bor)}
+.sb-panel-cell:last-child{border-right:none}
+.sb-panel-lbl{font-size:9px;letter-spacing:.2em;color:var(--txt3);text-transform:uppercase;margin-bottom:4px}
+.sb-panel-ta{width:100%;background:transparent;border:none;color:var(--txt);font-family:'Courier New',monospace;font-size:11px;resize:none;outline:none;min-height:52px;line-height:1.55}
+.sb-panel-ta::placeholder{color:var(--txt3)}
+.sb-panel-ta.caption{color:var(--txt2)}
+
+/* ── SCENE TAB ── */
+.scene-layout{display:grid;grid-template-columns:260px 1fr;gap:2px;min-height:600px}
+.scene-list-panel{background:var(--sur);border:1px solid var(--bor);display:flex;flex-direction:column}
+.scene-list-hdr{padding:12px 14px;border-bottom:1px solid var(--bor);display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.scene-list-hdr span{font-size:10px;letter-spacing:.22em;color:var(--txt3);text-transform:uppercase}
+.scene-list-items{flex:1;overflow-y:auto}
+.scene-list-item{padding:11px 14px;border-bottom:1px solid var(--bor);cursor:pointer;transition:background .15s}
+.scene-list-item:hover{background:var(--sur2)}
+.scene-list-item.on{background:var(--sur2);border-left:2px solid var(--acc)}
+.sci-name{font-size:12px;color:var(--txt);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sci-name.empty{color:var(--txt3);font-style:italic}
+.sci-meta{font-size:10px;color:var(--txt3);margin-top:3px;display:flex;gap:8px;align-items:center}
+.sci-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;border:1px solid rgba(255,255,255,.1)}
+.scene-editor{background:var(--sur);border:1px solid var(--bor);display:flex;flex-direction:column}
+.scene-editor-empty{flex:1;display:flex;align-items:center;justify-content:center;color:var(--txt3);font-size:11px;letter-spacing:.2em;text-transform:uppercase}
+/* scene subtabs */
+.sctabs{display:flex;border-bottom:1px solid var(--bor);background:var(--sur2);padding:0 18px;flex-shrink:0}
+.sctab{padding:9px 14px;font-size:10px;letter-spacing:.18em;text-transform:uppercase;cursor:pointer;color:var(--txt3);border-bottom:2px solid transparent;transition:all .2s;background:none;border-top:none;border-left:none;border-right:none;font-family:'Courier New',monospace;white-space:nowrap}
+.sctab:hover{color:var(--txt2)}
+.sctab.on{color:var(--acc);border-bottom-color:var(--acc)}
+.scpanel{padding:20px;overflow-y:auto;flex:1}
+.scpanel.hide{display:none}
+/* time of day arc */
+.tod-wrap{margin:14px 0 18px}
+.tod-arc-wrap{position:relative;width:100%;height:56px;margin-bottom:10px}
+.tod-arc-wrap canvas{width:100%;height:56px;display:block}
+.tod-label{font-size:11px;color:var(--txt);text-align:center;letter-spacing:.1em}
+.tod-sublabel{font-size:10px;color:var(--txt3);text-align:center;margin-top:2px}
+.tod-slider{width:100%;margin-top:8px;accent-color:var(--acc)}
+/* weather grid */
+.wx-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(80px,1fr));gap:5px;margin-top:8px}
+.wx-btn{background:var(--sur2);border:1px solid var(--bor);color:var(--txt3);font-family:'Courier New',monospace;font-size:10px;padding:8px 6px;cursor:pointer;transition:all .2s;display:flex;flex-direction:column;align-items:center;gap:4px;letter-spacing:.06em;text-transform:uppercase}
+.wx-btn:hover{border-color:var(--bor2);color:var(--txt2)}
+.wx-btn.on{border-color:var(--blutxt);color:var(--blutxt);background:rgba(26,72,136,.15)}
+.wx-icon{font-size:18px;line-height:1}
+/* calendar */
+.cal-wrap{margin-top:10px}
+.cal-nav{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.cal-nav-btn{background:none;border:1px solid var(--bor);color:var(--txt3);font-family:'Courier New',monospace;font-size:12px;padding:4px 10px;cursor:pointer;transition:all .2s}
+.cal-nav-btn:hover{border-color:var(--acc2);color:var(--txt)}
+.cal-month-label{flex:1;text-align:center;font-family:Georgia,serif;font-size:14px;color:var(--txt)}
+.cal-year-input{background:var(--sur2);border:1px solid var(--bor);color:var(--txt);font-family:'Courier New',monospace;font-size:13px;padding:4px 8px;width:72px;text-align:center}
+.cal-year-input:focus{outline:none;border-color:var(--acc2)}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px}
+.cal-dow{font-size:9px;letter-spacing:.15em;color:var(--txt3);text-align:center;padding:4px 0;text-transform:uppercase}
+.cal-day{font-size:11px;color:var(--txt2);text-align:center;padding:5px 2px;cursor:pointer;border:1px solid transparent;transition:all .15s}
+.cal-day:hover{background:var(--sur2);border-color:var(--bor)}
+.cal-day.empty{cursor:default;color:transparent}
+.cal-day.on{background:var(--acc2);border-color:var(--acc);color:var(--txt)}
+.cal-day.today{border-color:var(--txt3)}
+/* color palette */
+.pal-pickers{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:16px}
+.pal-pick-wrap{display:flex;flex-direction:column;gap:5px}
+.pal-swatch-large{width:100%;height:48px;border:1px solid var(--bor);cursor:pointer;transition:border-color .2s}
+.pal-swatch-large:hover{border-color:var(--bor2)}
+.pal-hex{font-size:11px;color:var(--txt2);text-align:center;font-family:'Courier New',monospace;letter-spacing:.08em}
+.pal-hidden-input{position:absolute;opacity:0;width:0;height:0;pointer-events:none}
+.harmony-section{margin-top:16px}
+.harmony-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.harmony-card{background:var(--sur2);border:1px solid var(--bor);padding:10px;cursor:pointer;transition:border-color .2s}
+.harmony-card:hover{border-color:var(--bor2)}
+.harmony-card.on{border-color:var(--gold)}
+.harmony-swatches{display:flex;gap:4px;margin-bottom:6px}
+.h-swatch{height:22px;flex:1;border-radius:2px}
+.harmony-name{font-size:10px;color:var(--txt);letter-spacing:.1em;text-transform:uppercase}
+.harmony-desc{font-size:10px;color:var(--txt3);margin-top:2px;line-height:1.4}
+.mood-presets{margin-top:18px}
+.mood-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:5px;margin-top:10px}
+.mood-btn{background:var(--sur2);border:1px solid var(--bor);padding:8px 10px;cursor:pointer;transition:all .2s;text-align:left}
+.mood-btn:hover{border-color:var(--bor2)}
+.mood-btn.on{border-color:var(--gold)}
+.mood-swatches{display:flex;gap:3px;margin-bottom:5px}
+.mood-sw{width:16px;height:16px;border-radius:2px;flex-shrink:0}
+.mood-name{font-size:10px;color:var(--txt);letter-spacing:.06em;text-transform:uppercase}
+.mood-desc{font-size:9px;color:var(--txt3);margin-top:2px;line-height:1.3}
+.pal-name-row{display:flex;gap:8px;align-items:center;margin-top:16px;padding-top:14px;border-top:1px solid var(--bor)}
+.saved-palettes{margin-top:14px;display:flex;flex-direction:column;gap:4px}
+.saved-pal{background:var(--sur2);border:1px solid var(--bor);padding:8px 12px;display:flex;align-items:center;gap:10px;cursor:pointer;transition:border-color .2s}
+.saved-pal:hover{border-color:var(--bor2)}
+.saved-pal-swatches{display:flex;gap:3px;flex-shrink:0}
+.saved-pal-sw{width:14px;height:14px;border-radius:2px}
+.saved-pal-name{flex:1;font-size:11px;color:var(--txt)}
+.saved-pal-del{background:none;border:none;color:var(--txt3);cursor:pointer;font-size:13px;padding:0 3px}
+.saved-pal-del:hover{color:var(--acc)}
+
+/* ── SCRIPT EDITOR ── */
+.script-tab-layout{display:grid;grid-template-columns:220px 1fr;height:calc(100vh - 108px);overflow:hidden}
+.script-left{background:var(--sur);border-right:1px solid var(--bor);display:flex;flex-direction:column;overflow:hidden}
+.script-left-tabs{display:flex;border-bottom:1px solid var(--bor);flex-shrink:0}
+.slt{flex:1;background:none;border:none;border-bottom:2px solid transparent;color:var(--txt3);font-family:'Courier New',monospace;font-size:9px;letter-spacing:.18em;text-transform:uppercase;padding:9px 6px;cursor:pointer;transition:all .2s}
+.slt:hover{color:var(--txt2)}
+.slt.on{color:var(--acc);border-bottom-color:var(--acc)}
+.script-list-items{flex:1;overflow-y:auto}
+.script-list-item{padding:10px 14px;border-bottom:1px solid var(--bor);cursor:pointer;transition:background .15s}
+.script-list-item:hover{background:var(--sur2)}
+.script-list-item.on{background:var(--sur2);border-left:2px solid var(--acc)}
+.sli-title{font-size:12px;color:var(--txt);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sli-title.empty{color:var(--txt3);font-style:italic}
+.sli-meta{font-size:10px;color:var(--txt3);margin-top:2px}
+.script-outline{flex:1;overflow-y:auto;padding:8px 0}
+.outline-item{padding:6px 14px;font-size:11px;color:var(--txt2);cursor:pointer;transition:background .12s;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;border-left:2px solid transparent}
+.outline-item:hover{background:var(--sur2);border-left-color:var(--bor2)}
+.outline-item.act{color:var(--acc2);font-size:10px;letter-spacing:.14em;text-transform:uppercase;padding-top:10px}
+.outline-item.page-hd{color:var(--txt3);font-size:10px}
+.script-right{display:flex;flex-direction:column;overflow:hidden}
+.script-toolbar{background:var(--sur);border-bottom:1px solid var(--bor);padding:8px 16px;display:flex;align-items:center;gap:10px;flex-shrink:0;flex-wrap:wrap}
+.script-format-sel{background:var(--sur2);border:1px solid var(--bor);color:var(--txt);font-family:'Courier New',monospace;font-size:10px;padding:5px 8px;cursor:pointer}
+.script-format-sel:focus{outline:none;border-color:var(--acc2)}
+.script-title-input{background:transparent;border:none;color:var(--txt);font-family:Georgia,serif;font-size:14px;flex:1;min-width:120px;padding:3px 0}
+.script-title-input:focus{outline:none;border-bottom:1px solid var(--bor2)}
+.script-stats{font-size:10px;color:var(--txt3);letter-spacing:.1em;white-space:nowrap}
+.script-type-label{font-size:10px;letter-spacing:.18em;text-transform:uppercase;padding:4px 10px;border:1px solid var(--bor);color:var(--txt3);background:var(--sur2);min-width:90px;text-align:center;transition:all .2s}
+.script-area{flex:1;overflow-y:auto;background:#2a2826;padding:32px 40px}
+.script-page{background:#f8f7f4;max-width:820px;margin:0 auto;padding:72pt 72pt 96pt 108pt;font-family:'Courier New',Courier,monospace;font-size:12pt;line-height:1.15;color:#000;min-height:660px;box-shadow:0 4px 24px rgba(0,0,0,.45);position:relative}
+.script-page-num{position:absolute;top:36pt;right:72pt;font-size:12pt;color:#555}
+/* Block rows */
+.sbr{display:flex;align-items:flex-start;gap:0;position:relative;margin:0}
+.sbr:focus-within .sb-type-btn{opacity:1}
+.sb-type-btn{flex-shrink:0;width:34px;background:none;border:none;color:#aaa8;font-size:8px;font-family:'Courier New',monospace;letter-spacing:.1em;padding:2px 0;cursor:pointer;text-align:right;padding-right:6px;margin-top:2px;opacity:0;transition:opacity .15s;text-transform:uppercase;line-height:1.5}
+.sb-type-btn:hover{color:var(--acc)!important;opacity:1!important}
+.script-block{flex:1;outline:none;white-space:pre-wrap;word-wrap:break-word;min-height:1.3em;caret-color:#c03418;position:relative}
+.script-block:empty:before{content:attr(data-placeholder);color:#bbb;pointer-events:none}
+/* Screenplay block types */
+.script-page[data-format="screenplay"] .script-block[data-type="scene_heading"],
+.script-page[data-format="tv"] .script-block[data-type="scene_heading"]{text-transform:uppercase;font-weight:bold;margin-top:20pt;margin-bottom:10pt;display:block}
+.script-page[data-format="screenplay"] .script-block[data-type="action"],
+.script-page[data-format="tv"] .script-block[data-type="action"]{margin:10pt 0;display:block}
+.script-page[data-format="screenplay"] .script-block[data-type="character"],
+.script-page[data-format="tv"] .script-block[data-type="character"]{text-transform:uppercase;margin-left:180pt;margin-top:10pt;margin-bottom:0;display:block}
+.script-page[data-format="screenplay"] .script-block[data-type="parenthetical"],
+.script-page[data-format="tv"] .script-block[data-type="parenthetical"]{margin-left:140pt;margin-right:140pt;display:block}
+.script-page[data-format="screenplay"] .script-block[data-type="dialogue"],
+.script-page[data-format="tv"] .script-block[data-type="dialogue"]{margin-left:100pt;margin-right:100pt;margin-bottom:10pt;display:block}
+.script-page[data-format="screenplay"] .script-block[data-type="transition"],
+.script-page[data-format="tv"] .script-block[data-type="transition"]{text-transform:uppercase;text-align:right;margin:10pt 0;display:block}
+.script-page[data-format="screenplay"] .script-block[data-type="shot"],
+.script-page[data-format="tv"] .script-block[data-type="shot"]{text-transform:uppercase;margin:8pt 0;display:block}
+.script-page[data-format="tv"] .script-block[data-type="act_break"]{text-align:center;text-transform:uppercase;font-weight:bold;margin:24pt 0;border-top:1px solid #555;border-bottom:1px solid #555;padding:6pt 0;display:block}
+.script-page[data-format="tv"] .script-block[data-type="cold_open"]{text-align:center;text-transform:uppercase;font-weight:bold;margin:20pt 0;display:block}
+/* Stage play */
+.script-page[data-format="stage"] .script-block[data-type="act_heading"]{text-transform:uppercase;text-align:center;font-weight:bold;margin:24pt 0 12pt;display:block}
+.script-page[data-format="stage"] .script-block[data-type="scene_heading"]{text-transform:uppercase;text-align:center;margin:12pt 0;display:block}
+.script-page[data-format="stage"] .script-block[data-type="stage_direction"]{font-style:italic;margin:8pt 0;margin-left:40pt;display:block}
+.script-page[data-format="stage"] .script-block[data-type="character"]{text-transform:uppercase;font-weight:bold;margin-top:10pt;margin-bottom:0;display:block}
+.script-page[data-format="stage"] .script-block[data-type="dialogue"]{margin-left:40pt;margin-bottom:8pt;display:block}
+/* Comic script */
+.script-page[data-format="comic"] .script-block[data-type="page_heading"]{text-transform:uppercase;font-weight:bold;border-top:2px solid #000;padding-top:10pt;margin:20pt 0 6pt;display:block}
+.script-page[data-format="comic"] .script-block[data-type="panel_heading"]{font-weight:bold;text-transform:uppercase;margin:10pt 0 4pt;display:block}
+.script-page[data-format="comic"] .script-block[data-type="panel_action"]{margin-left:20pt;margin-bottom:6pt;display:block}
+.script-page[data-format="comic"] .script-block[data-type="character"]{text-transform:uppercase;font-weight:bold;margin-left:20pt;margin-top:6pt;margin-bottom:0;display:block}
+.script-page[data-format="comic"] .script-block[data-type="dialogue"]{margin-left:40pt;margin-bottom:4pt;display:block}
+.script-page[data-format="comic"] .script-block[data-type="caption"]{font-style:italic;margin-left:20pt;margin-bottom:4pt;display:block}
+.script-page[data-format="comic"] .script-block[data-type="sfx"]{text-transform:uppercase;font-weight:bold;margin-left:20pt;margin-bottom:4pt;display:block}
+/* Treatment */
+.script-page[data-format="treatment"] .script-block[data-type="scene_heading"]{font-weight:bold;text-transform:uppercase;margin:18pt 0 8pt;display:block}
+.script-page[data-format="treatment"] .script-block[data-type="action"]{margin-bottom:12pt;display:block;text-indent:24pt}
+/* Autocomplete */
+.script-autocomplete{position:absolute;background:#fff;border:1px solid #ccc;box-shadow:0 4px 12px rgba(0,0,0,.2);z-index:50;max-height:160px;overflow-y:auto;min-width:200px;font-family:'Courier New',monospace;font-size:11pt}
+.sac-item{padding:5px 12px;cursor:pointer;color:#000;font-size:11pt}
+.sac-item:hover,.sac-item.on{background:#e8f0ff}
+/* Autocomplete wrapper */
+.script-block-wrap{position:relative}
+/* Novel */
+.script-page[data-format="novel"]{font-family:Georgia,serif;font-size:12pt;line-height:1.8;padding:72pt 90pt}
+.script-page[data-format="novel"] .script-block[data-type="chapter_heading"]{font-family:Georgia,serif;font-size:18pt;font-weight:normal;text-align:center;margin:48pt 0 36pt;display:block;letter-spacing:.05em}
+.script-page[data-format="novel"] .script-block[data-type="prose"]{display:block;margin-bottom:0;text-indent:2em}
+.script-page[data-format="novel"] .script-block[data-type="prose"]:first-of-type,.script-page[data-format="novel"] .sbr:has([data-type="scene_break"])+.sbr [data-type="prose"]{text-indent:0}
+.script-page[data-format="novel"] .script-block[data-type="scene_break"]{text-align:center;margin:24pt 0;display:block;color:#888;letter-spacing:.3em}
+.script-page[data-format="novel"] .script-block[data-type="block_quote"]{margin:16pt 48pt;font-style:italic;display:block;border-left:2px solid #ccc;padding-left:16pt}
+.script-page[data-format="novel"] .script-block[data-type="author_note"]{font-style:italic;color:#888;font-size:10pt;margin:8pt 0;display:block;background:#f5f5f0;padding:6pt 10pt}
+/* Poetry */
+.script-page[data-format="poetry"]{font-family:Georgia,serif;font-size:12pt;line-height:1.9;max-width:560px;margin:0 auto;padding:72pt 40pt}
+.script-page[data-format="poetry"] .script-block[data-type="poem_title"]{font-size:16pt;font-weight:normal;margin-bottom:32pt;display:block;letter-spacing:.06em}
+.script-page[data-format="poetry"] .script-block[data-type="verse_line"]{display:block;margin:0;padding:0;white-space:pre-wrap}
+.script-page[data-format="poetry"] .script-block[data-type="couplet"]{display:block;margin:0;padding:0;white-space:pre-wrap;font-style:italic}
+.script-page[data-format="poetry"] .script-block[data-type="stanza_break"]{display:block;height:14pt;margin:0}
+.script-page[data-format="poetry"] .script-block[data-type="epigraph"]{font-style:italic;color:#666;text-align:right;margin:0 0 28pt;display:block;font-size:11pt}
+.script-page[data-format="poetry"] .script-block[data-type="section_heading"]{font-size:13pt;margin:28pt 0 10pt;display:block;letter-spacing:.1em}
+.script-page[data-format="poetry"] .script-block[data-type="dedication"]{font-style:italic;color:#666;margin:0 0 36pt;display:block}
+/* Print */
+@media print{
+  body>*:not(#print-script-target){display:none!important}
+  #print-script-target{display:block!important}
+  .script-page{box-shadow:none;max-width:100%;padding:1in 1in 1in 1.5in;background:#fff;margin:0}
+  .script-page[data-format="novel"]{padding:1in 1.25in;font-size:11pt}
+  .script-page[data-format="poetry"]{padding:1.25in 1.5in;font-size:11pt;max-width:100%}
+  .sb-type-btn{display:none}
+  .script-block:empty:before{display:none}
+  .script-block[data-type="author_note"]{display:none}
+  @page{margin:0;size:letter}
+}
+
+/* ── SPLASH ── */
+#splash{position:fixed;inset:0;background:#060606;z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0;pointer-events:none}
+#splash.hiding{animation:splashOut .6s cubic-bezier(.4,0,.2,1) forwards}
+@keyframes splashOut{0%{opacity:1}100%{opacity:0}}
+.splash-word{font-family:Georgia,serif;font-size:clamp(42px,7vw,88px);letter-spacing:.16em;color:#e0dbd2;text-transform:uppercase;line-height:1;display:flex}
+.splash-letter{opacity:0;animation:splashLetterIn .55s cubic-bezier(.16,1,.3,1) forwards}
+@keyframes splashLetterIn{0%{opacity:0;transform:translateY(18px)}100%{opacity:1;transform:translateY(0)}}
+.splash-accent{color:#bb3015}
+.splash-sub{font-family:'Courier New',monospace;font-size:clamp(9px,1.2vw,12px);letter-spacing:.38em;color:#464340;text-transform:uppercase;margin-top:18px;opacity:0;animation:splashSubIn .5s ease forwards}
+@keyframes splashSubIn{0%{opacity:0}100%{opacity:1}}
+.splash-line{width:0;height:1px;background:var(--acc,#bb3015);margin-top:24px;animation:splashLineIn .5s ease forwards}
+@keyframes splashLineIn{0%{width:0}100%{width:clamp(80px,12vw,160px)}}
+.elegy{font-family:Georgia,serif;font-style:italic;font-size:12px;color:var(--txt3);line-height:1.8;padding:12px 16px;border-left:2px solid var(--acc2);margin-bottom:18px;max-width:540px}
+.elegy cite{display:block;margin-top:5px;font-style:normal;font-size:10px;letter-spacing:.2em;color:var(--txt3)}
+.saved{position:fixed;bottom:16px;right:16px;font-size:10px;letter-spacing:.2em;color:var(--txt3);text-transform:uppercase;opacity:0;transition:opacity .3s;pointer-events:none}
+.saved.show{opacity:1}
+/* ── MISC ── */letter-spacing:.12em;padding:2px 7px;text-transform:uppercase;border:1px solid var(--bor);color:var(--txt3)}
+.tag.dev{border-color:#3a3a10;color:#aaaa40}
+.tag.wri{border-color:#0a3a1a;color:#40aa60}
+.tag.rev{border-color:#3a1a0a;color:#aa6040}
+.tag.done{border-color:var(--bor);color:var(--txt3)}
+::-webkit-scrollbar{width:4px;height:4px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--bor2)}
+</style>
+</head>
+<body>
+
+<!-- SPLASH -->
+<div id="splash" aria-hidden="true">
+  <div class="splash-word" id="splash-word"></div>
+  <div class="splash-line"></div>
+  <div class="splash-sub">The Story Master</div>
+</div>
+
+<!-- HEADER -->
+<header class="hdr">
+  <div class="logo-btn" onclick="toggleProjPanel()">
+    <div>
+      <div class="logo-mark">F<span>E</span>RDOWSI</div>
+      <div class="logo-sub">The Story Master</div>
+    </div>
+  </div>
+  <div class="proj-indicator">
+    <div class="proj-name" id="hdr-proj-name">Loading…</div>
+    <div class="proj-format" id="hdr-proj-format"></div>
+  </div>
+  <div class="hdr-right">
+    <button class="hdr-new-btn" onclick="newProjectGated()">+ New Project</button>
+    <button class="hdr-btn drive-btn" id="drive-btn" onclick="driveAction()">
+      <div class="drive-dot" id="drive-dot"></div>
+      <span id="drive-lbl">Connect Drive</span>
+    </button>
+    <button class="hdr-btn" onclick="exportToGoogleDocs()">Export Doc</button>
+    <button class="hdr-btn" onclick="showSettings()">Settings</button>
+  </div>
+</header>
+
+<!-- TABS -->
+<div class="tabs">
+  <button class="tab on" onclick="sw('characters')">Characters</button>
+  <button class="tab" onclick="sw('settings')">Settings</button>
+  <button class="tab" onclick="sw('vehicles')">Vehicles</button>
+  <button class="tab" onclick="sw('weapons')">Accessories</button>
+  <button class="tab" onclick="sw('scenes')">Scene</button>
+  <button class="tab" onclick="sw('structure')">Structure</button>
+  <button class="tab" onclick="sw('script')">Script</button>
+  <button class="tab" onclick="sw('storyboard')">Storyboard</button>
+  <button class="tab" onclick="sw('biblecheck')">Bible Check</button>
+  <button class="tab" onclick="sw('notes')">Notes</button>
+</div>
+
+<!-- CHARACTERS -->
+<div class="main" id="tab-characters">
+  <div class="bbar">
+    <div class="blbl" id="budget-label">Page Budget</div>
+    <div class="btrack"><div class="bfill" id="bfill" style="width:0%"></div></div>
+    <div class="bnum"><span id="bused">0</span><small id="btarget"> / 120 pg</small></div>
+  </div>
+  <div class="stitle">
+    <span id="chars-title">Characters</span>
+    <button class="bghost" onclick="addChar()">+ Add Character</button>
+  </div>
+  <div class="char-grid" id="char-grid"></div>
+</div>
+
+<!-- SETTINGS -->
+<div class="main" id="tab-settings" style="display:none">
+  <div class="stitle">
+    <span>Settings</span>
+    <button class="bghost" onclick="addSetting()">+ Add Setting</button>
+  </div>
+  <div class="loc-grid" id="setting-grid"></div>
+</div>
+
+<!-- VEHICLES -->
+<div class="main" id="tab-vehicles" style="display:none">
+  <div class="stitle">
+    <span>Vehicles</span>
+    <button class="bghost" onclick="addVehicle()">+ Add Vehicle</button>
+  </div>
+  <div class="asset-grid" id="vehicle-grid"></div>
+</div>
+
+<!-- WEAPONS / TOOLS -->
+<div class="main" id="tab-weapons" style="display:none">
+  <div class="stitle">
+    <span>Accessories</span>
+    <button class="bghost" onclick="addWeapon()">+ Add Accessory</button>
+  </div>
+  <div class="asset-grid" id="weapon-grid"></div>
+</div>
+
+<!-- SCENE -->
+<div class="main" id="tab-scenes" style="display:none;padding:0">
+  <div class="scene-layout">
+    <div class="scene-list-panel">
+      <div class="scene-list-hdr">
+        <span>Scenes</span>
+        <button class="bghost" style="margin:0;padding:4px 10px;font-size:9px" onclick="addScene2()">+ Add</button>
+      </div>
+      <div class="scene-list-items" id="scene-list-items"></div>
+    </div>
+    <div class="scene-editor" id="scene-editor">
+      <div class="scene-editor-empty" id="scene-editor-empty">Select or create a scene</div>
+      <div id="scene-editor-inner" style="display:none;flex:1;display:none;flex-direction:column">
+        <div class="sctabs">
+          <button class="sctab on" onclick="swSc('setup')">Setup</button>
+          <button class="sctab" onclick="swSc('timeweather')">Time &amp; Weather</button>
+          <button class="sctab" onclick="swSc('calendar')">Calendar</button>
+          <button class="sctab" onclick="swSc('palette')">Color Palette</button>
+        </div>
+        <!-- SETUP -->
+        <div class="scpanel" id="sc-setup">
+          <div class="row2">
+            <div class="fg"><label class="fl">Scene Name</label><input class="fi" id="sc-name" type="text" placeholder="Scene name" oninput="upCurScene('name',this.value)"></div>
+            <div class="fg"><label class="fl">Structure Reference</label><input class="fi" id="sc-phaseref" type="text" placeholder="Phase 2, Act 1, Episode 3…" oninput="upCurScene('phaseRef',this.value)"></div>
+          </div>
+          <div class="fg" style="margin-top:12px"><label class="fl">Synopsis</label><textarea class="fi" id="sc-synopsis" rows="3" placeholder="What happens in this scene. One paragraph." oninput="upCurScene('synopsis',this.value)"></textarea></div>
+          <div class="row2" style="margin-top:10px">
+            <div class="fg"><label class="fl">Characters Present</label><input class="fi" id="sc-chars" type="text" placeholder="Names, roles" oninput="upCurScene('chars',this.value)"></div>
+            <div class="fg"><label class="fl">Setting Reference</label><input class="fi" id="sc-settingref" type="text" placeholder="From Settings tab" oninput="upCurScene('settingRef',this.value)"></div>
+          </div>
+          <div class="row2" style="margin-top:10px">
+            <div class="fg"><label class="fl">Vehicles in Scene</label><input class="fi" id="sc-vehicles" type="text" placeholder="From Vehicles tab" oninput="upCurScene('vehicles',this.value)"></div>
+            <div class="fg"><label class="fl">Accessories / Props</label><input class="fi" id="sc-weapons" type="text" placeholder="From Accessories tab" oninput="upCurScene('weapons',this.value)"></div>
+          </div>
+          <div class="fg" style="margin-top:10px"><label class="fl">Director / Author Notes</label><textarea class="fi" id="sc-notes" rows="3" placeholder="Tone, pacing, key beats, what this scene must accomplish…" oninput="upCurScene('notes',this.value)"></textarea></div>
+          <div style="margin-top:12px;display:flex;justify-content:flex-end">
+            <button class="bghost" style="color:var(--acc);border-color:var(--acc2)" onclick="delCurScene()">Delete Scene</button>
+          </div>
+        </div>
+        <!-- TIME & WEATHER -->
+        <div class="scpanel hide" id="sc-timeweather">
+          <div class="fl" style="margin-bottom:6px">Time of Day</div>
+          <div class="tod-wrap">
+            <div class="tod-arc-wrap"><canvas id="tod-canvas" width="600" height="56"></canvas></div>
+            <div class="tod-label" id="tod-label">12:00</div>
+            <div class="tod-sublabel" id="tod-sublabel">Noon</div>
+            <input type="range" class="tod-slider" id="tod-slider" min="0" max="1439" value="720" oninput="setTimeOfDay(this.value)">
+          </div>
+          <div style="margin-top:18px"><div class="fl" style="margin-bottom:6px">Season</div>
+          <div style="display:flex;gap:6px;flex-wrap:wrap">
+            ${['Spring','Summer','Autumn','Winter','Dry Season','Wet Season','Monsoon','Endless Night','Endless Day','Post-Harvest'].map(s=>`<button class="wx-btn" id="sea-${s.replace(/\s/g,'-')}" onclick="setSeason('${s}')" style="flex:1;min-width:80px">${s}</button>`).join('')}
+          </div></div>
+          <div style="margin-top:18px"><div class="fl" style="margin-bottom:6px">Weather &amp; Atmospheric Conditions</div>
+          <div class="wx-grid" id="wx-grid"></div></div>
+          <div style="margin-top:16px"><div class="fl" style="margin-bottom:6px">Fictional / Story Date</div>
+          <input class="fi" id="sc-storydate" type="text" placeholder="e.g. Year 3 After Seeding, Spring — or Day 7 of the siege" oninput="upCurScene('storyDate',this.value)"></div>
+        </div>
+        <!-- CALENDAR -->
+        <div class="scpanel hide" id="sc-calendar">
+          <div style="font-size:11px;color:var(--txt2);margin-bottom:14px;line-height:1.6">Set a real-world calendar date for this scene. Navigate to any year — historical, contemporary, or far future. Pair with the fictional story date on the Time &amp; Weather tab.</div>
+          <div class="cal-wrap">
+            <div class="cal-nav">
+              <button class="cal-nav-btn" onclick="calNav(-1)">◀</button>
+              <div class="cal-month-label" id="cal-month-label"></div>
+              <button class="cal-nav-btn" onclick="calNav(1)">▶</button>
+              <input class="cal-year-input" type="number" id="cal-year-input" min="-9999" max="9999" oninput="calSetYear(this.value)">
+            </div>
+            <div class="cal-grid" id="cal-grid"></div>
+          </div>
+          <div id="cal-selected-display" style="margin-top:14px;font-size:11px;color:var(--txt2)"></div>
+          <button class="bghost" style="margin-top:10px" onclick="clearSceneDate()">Clear Date</button>
+        </div>
+        <!-- COLOR PALETTE -->
+        <div class="scpanel hide" id="sc-palette">
+          <div class="fl" style="margin-bottom:10px">Key Colors — Grade &amp; Tone</div>
+          <div class="pal-pickers">
+            <div class="pal-pick-wrap">
+              <label class="fl">Key / Midtone</label>
+              <div class="pal-swatch-large" id="sw-key" onclick="triggerPick('pick-key')"></div>
+              <div class="pal-hex" id="hex-key">#888888</div>
+              <input type="color" class="pal-hidden-input" id="pick-key" value="#888888" oninput="setPalColor('key',this.value)">
+            </div>
+            <div class="pal-pick-wrap">
+              <label class="fl">Shadow / Dark</label>
+              <div class="pal-swatch-large" id="sw-shadow" onclick="triggerPick('pick-shadow')"></div>
+              <div class="pal-hex" id="hex-shadow">#1a1a1a</div>
+              <input type="color" class="pal-hidden-input" id="pick-shadow" value="#1a1a1a" oninput="setPalColor('shadow',this.value)">
+            </div>
+            <div class="pal-pick-wrap">
+              <label class="fl">Highlight / Light</label>
+              <div class="pal-swatch-large" id="sw-highlight" onclick="triggerPick('pick-highlight')"></div>
+              <div class="pal-hex" id="hex-highlight">#e8e8e8</div>
+              <input type="color" class="pal-hidden-input" id="pick-highlight" value="#e8e8e8" oninput="setPalColor('highlight',this.value)">
+            </div>
+          </div>
+          <div class="harmony-section">
+            <div class="fl">Harmony Schemes — generated from Key Color</div>
+            <div class="harmony-grid" id="harmony-grid"></div>
+          </div>
+          <div class="mood-presets">
+            <div class="fl">Mood Presets</div>
+            <div class="mood-grid" id="mood-grid"></div>
+          </div>
+          <div class="pal-name-row">
+            <input class="fi" id="pal-save-name" type="text" placeholder="Name this palette…" style="flex:1">
+            <button class="bsolid" onclick="savePalette()">Save Palette</button>
+          </div>
+          <div class="saved-palettes" id="saved-palettes"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- STRUCTURE -->
+<div class="main" id="tab-structure" style="display:none">
+  <div class="stitle">
+    <span id="struct-title">Story Structure</span>
+    <button class="bghost" onclick="addUnit()">+ Add Unit</button>
+  </div>
+  <div class="slist" id="slist"></div>
+</div>
+
+<!-- STORYBOARD -->
+<div class="main" id="tab-storyboard" style="display:none">
+  <div class="stitle">Storyboard</div>
+  <div class="sbtb">
+    <button class="sbbtn on" id="t-pencil" onclick="setTool('pencil')">Pencil</button>
+    <button class="sbbtn" id="t-brush" onclick="setTool('brush')">Brush</button>
+    <button class="sbbtn" id="t-eraser" onclick="setTool('eraser')">Eraser</button>
+    <button class="sbbtn" id="t-line" onclick="setTool('line')">Line</button>
+    <div class="sbsep"></div>
+    <input type="color" id="sb-color" value="#1a1a1a" style="width:28px;height:24px;border:1px solid var(--bor);background:none;cursor:pointer;padding:2px">
+    <div class="rwrap" style="width:100px">
+      <input type="range" id="sb-size" min="1" max="20" value="2" oninput="document.getElementById('sbsv').textContent=this.value">
+      <span class="rval" id="sbsv">2</span>
+    </div>
+    <div class="sbsep"></div>
+    <select class="fi" id="sb-layout" style="width:145px;padding:4px 7px;font-size:11px" onchange="drawGrid()">
+      <option value="full">Full page</option>
+      <option value="2h" selected>2 horizontal</option>
+      <option value="2v">2 vertical</option>
+      <option value="3t">3 — top wide</option>
+      <option value="3b">3 — bottom wide</option>
+      <option value="4">4 — 2×2</option>
+      <option value="6">6 — 3×2</option>
+      <option value="splash">Splash + 2</option>
+    </select>
+    <div class="sbsep"></div>
+    <button class="sbbtn" onclick="undoSb()">Undo</button>
+    <button class="sbbtn" onclick="clearPg()">Clear</button>
+    <button class="sbbtn" onclick="exportPg()">Export PNG</button>
+  </div>
+  <div class="sb-wrap"><canvas id="sb-canvas" width="612" height="792"></canvas></div>
+  <div class="sbpgs" id="sbpgs"></div>
+  <div class="sb-annotations" id="sb-annotations"></div>
+</div>
+
+<!-- BIBLE CHECK -->
+<div class="main" id="tab-biblecheck" style="display:none;padding:0">
+  <div class="bc-layout">
+    <div class="bc-summary">
+      <div class="bc-score-ring">
+        <div class="bc-score-num" id="bc-score">—</div>
+        <div class="bc-score-label">Bible Completeness</div>
+        <div class="bc-score-bar"><div class="bc-score-fill" id="bc-score-fill" style="width:0%"></div></div>
+      </div>
+      <div class="bc-counter-row">
+        <div class="bc-counter err"><div class="bc-counter-num" id="bc-n-err">0</div><div class="bc-counter-lbl">Errors</div></div>
+        <div class="bc-counter warn"><div class="bc-counter-num" id="bc-n-warn">0</div><div class="bc-counter-lbl">Warnings</div></div>
+        <div class="bc-counter info"><div class="bc-counter-num" id="bc-n-info">0</div><div class="bc-counter-lbl">Info</div></div>
+      </div>
+      <div>
+        <div class="fl" style="margin-bottom:10px">Character Completeness</div>
+        <div class="bc-completeness" id="bc-char-completeness"></div>
+      </div>
+      <div>
+        <div class="fl" style="margin-bottom:10px">Scene Completeness</div>
+        <div class="bc-completeness" id="bc-scene-completeness"></div>
+      </div>
+    </div>
+    <div class="bc-results">
+      <div class="bc-results-hdr">
+        <span class="bc-results-title" id="bc-results-title">Run a check to see issues</span>
+        <button class="bsolid" onclick="runBibleCheck()" style="padding:6px 16px;font-size:10px">Run Check</button>
+      </div>
+      <div id="bc-issue-list" style="flex:1;overflow-y:auto"></div>
+    </div>
+  </div>
+</div>
+
+<!-- SCRIPT -->
+<div id="tab-script" style="display:none;padding:0">
+  <div class="script-tab-layout">
+    <div class="script-left">
+      <div class="script-left-tabs">
+        <button class="slt on" id="slt-docs" onclick="swScriptLeft('docs')">Scripts</button>
+        <button class="slt" id="slt-outline" onclick="swScriptLeft('outline')">Outline</button>
+      </div>
+      <div id="script-doc-list" class="script-list-items"></div>
+      <div id="script-outline" class="script-outline" style="display:none"></div>
+      <div style="padding:10px;border-top:1px solid var(--bor);flex-shrink:0">
+        <button class="bghost" style="width:100%;font-size:9px" onclick="addScript()">+ New Script</button>
+      </div>
+    </div>
+    <div class="script-right">
+      <div class="script-toolbar">
+        <select class="script-format-sel" id="script-fmt-sel" onchange="setScriptFormat(this.value)">
+          <option value="screenplay">Screenplay</option>
+          <option value="tv">TV Script</option>
+          <option value="stage">Stage Play</option>
+          <option value="comic">Comic Script</option>
+          <option value="novel">Novel</option>
+          <option value="poetry">Poetry</option>
+          <option value="treatment">Treatment</option>
+        </select>
+        <input class="script-title-input" id="script-title-input" type="text" placeholder="Untitled Script" oninput="updateScriptTitle(this.value)">
+        <div class="script-type-label" id="script-type-label">Action</div>
+        <div class="script-stats" id="script-stats">0 pg · 0 words</div>
+        <button class="bghost" style="margin:0;padding:5px 12px;font-size:9px" onclick="printScript()">Export PDF</button>
+        <button class="bghost" style="margin:0;padding:5px 12px;font-size:9px" id="script-export-btn" onclick="exportFountain()">Export .fountain</button>
+        <button class="bghost" style="margin:0;padding:5px 12px;font-size:9px;color:var(--acc);border-color:var(--acc2)" onclick="delCurScript()">Delete</button>
+      </div>
+      <div class="script-area" id="script-area">
+        <div id="script-page" class="script-page" data-format="screenplay"></div>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="print-script-target" style="display:none"></div>
+
+<!-- NOTES -->
+<div class="main" id="tab-notes" style="display:none">
+  <div class="stitle">Story Bible Notes</div>
+  <div class="narea" id="notes-area"></div>
+</div>
+
+<!-- PROJECT DASHBOARD -->
+<div id="proj-panel" onclick="closeProjPanelOutside(event)">
+  <div class="proj-panel-inner">
+    <div class="pp-header">
+      <div class="pp-title">F<span style="color:var(--acc)">E</span>RDOWSI — Projects</div>
+      <div class="pp-actions">
+        <button class="bdrive" onclick="importFromDrive()">Import from Drive</button>
+        <button class="bghost" onclick="exportProjectJSON()">Export JSON</button>
+        <button class="bghost" onclick="closeProjPanel()">Close</button>
+      </div>
+    </div>
+    <!-- Current project strip -->
+    <div class="pp-current">
+      <div class="pp-current-label">Current</div>
+      <div>
+        <div class="pp-current-name" id="pp-cur-name">—</div>
+        <div class="pp-current-meta" id="pp-cur-meta"></div>
+      </div>
+      <div class="pp-current-actions">
+        <button class="bghost" style="margin:0;font-size:10px" onclick="syncToDrive()">Sync to Drive</button>
+        <button class="bghost" style="margin:0;font-size:10px" onclick="exportProjectJSON()">Export JSON</button>
+      </div>
+    </div>
+    <!-- Medium selector -->
+    <div class="pp-medium-section">
+      <div class="pp-section-label">Change medium — updates current project format</div>
+      <div class="medium-grid" id="medium-grid"></div>
+    </div>
+    <!-- All projects -->
+    <div class="pp-projects-section">
+      <div class="pp-section-label" style="margin-bottom:12px">All Projects</div>
+      <div class="proj-grid" id="proj-grid"></div>
+    </div>
+  </div>
+</div>
+
+<!-- SAVE WARNING MODAL -->
+<div class="modal-overlay" id="save-warn-modal">
+  <div class="warn-modal">
+    <div class="warn-modal-title">Start a new project?</div>
+    <div class="warn-modal-msg">Your current project is saved automatically to this browser. If you want a permanent backup before continuing, save it to Google Drive or export a JSON file now.</div>
+    <div class="warn-modal-irrev">⚠ This action cannot be undone. Unsaved work will be lost if your browser data is cleared.</div>
+    <div class="warn-modal-btns">
+      <button class="bghost" onclick="closeModal('save-warn-modal')">Cancel</button>
+      <button class="bghost" onclick="syncToDrive();closeModal('save-warn-modal')">Save to Drive first</button>
+      <button class="bghost" onclick="exportProjectJSON();closeModal('save-warn-modal')">Export JSON first</button>
+      <button class="bsolid" onclick="closeModal('save-warn-modal');showNewProjModal()">Continue — New Project</button>
+    </div>
+  </div>
+</div>
+
+<!-- SETTINGS MODAL -->
+<div class="modal-overlay" id="settings-modal" onclick="closeModalOutside(event,'settings-modal')">
+  <div class="modal wide">
+    <div class="modal-title">Settings</div>
+    <div class="row2">
+      <div class="fg"><label class="fl">Anthropic API Key</label><input class="fi" type="password" id="set-ak" placeholder="sk-ant-…"></div>
+      <div class="fg"><label class="fl">Google Client ID</label><input class="fi" type="text" id="set-gcid" placeholder="……apps.googleusercontent.com"></div>
+    </div>
+    <details class="setup-guide" style="margin-top:14px">
+      <summary>Google Drive Setup Guide</summary>
+      <p style="margin-top:8px"><strong style="color:var(--txt)">One-time setup to enable Drive sync:</strong></p>
+      <ol style="margin-top:8px;padding-left:18px;display:flex;flex-direction:column;gap:6px">
+        <li>Go to <code>console.cloud.google.com</code> → New Project</li>
+        <li>Enable <strong style="color:var(--txt)">Google Drive API</strong> in the API Library</li>
+        <li>Go to <strong style="color:var(--txt)">Credentials</strong> → Create OAuth 2.0 Client ID → Web Application</li>
+        <li>Add Authorized JavaScript Origins:<br><code>http://localhost:8080</code> and <code>http://127.0.0.1:8080</code></li>
+        <li>Copy the Client ID and paste it above</li>
+        <li>Serve Ferdowsi locally: <code>python3 -m http.server 8080</code></li>
+        <li>Open <code>http://localhost:8080/Ferdowsi.html</code></li>
+      </ol>
+    </details>
+    <div class="modal-footer">
+      <button class="bghost" onclick="closeModal('settings-modal')">Cancel</button>
+      <button class="bsolid" onclick="saveSettings()">Save Settings</button>
+    </div>
+  </div>
+</div>
+
+<!-- NEW PROJECT MODAL -->
+<div class="modal-overlay" id="new-proj-modal" onclick="closeModalOutside(event,'new-proj-modal')">
+  <div class="modal">
+    <div class="modal-title">New Project</div>
+    <div class="fg"><label class="fl">Project Title</label><input class="fi" type="text" id="np-name" placeholder="Untitled Story"></div>
+    <div style="margin-top:14px">
+      <label class="fl" style="margin-bottom:10px;display:block">Medium</label>
+      <div class="medium-grid" id="np-medium-grid" style="grid-template-columns:repeat(auto-fill,minmax(110px,1fr))"></div>
+      <input type="hidden" id="np-format" value="graphic_novel">
+    </div>
+    <div class="fg" style="margin-top:12px"><label class="fl">Genre</label><input class="fi" type="text" id="np-genre" placeholder="e.g. Sci-fi, Horror, Drama, Musical"></div>
+    <div class="fg" style="margin-top:10px"><label class="fl">Logline</label><textarea class="fi" id="np-logline" rows="3" placeholder="One or two sentences. The core of the story."></textarea></div>
+    <div class="fg" style="margin-top:10px"><label class="fl">Target Length</label><input class="fi" type="text" id="np-length" placeholder="e.g. 100–120 pages, 90 minutes, 80,000 words"></div>
+    <div class="modal-footer">
+      <button class="bghost" onclick="closeModal('new-proj-modal')">Cancel</button>
+      <button class="bsolid" onclick="createProject()">Create Project</button>
+    </div>
+  </div>
+</div>
+
+<div class="saved" id="saved">Saved</div>
+
+<script>
+// ── CONSTANTS ─────────────────────────────────────────────────────────────────
+const FORMAT_LABELS={graphic_novel:'Graphic Novel',comic_series:'Comic Series',comic_script:'Comic Script',screenplay:'Screenplay',tv_script:'TV Script',stage_play:'Stage Play',novel:'Novel',poetry:'Poetry / Verse',treatment:'Treatment',game:'Game Narrative',series:'Animated / Live Series',audio:'Audio Drama',other:'Other'};
+const FORMAT_STRUCT={
+  graphic_novel:{label:'Phase',unit:'pg',target:'100–120'},
+  comic_series:{label:'Issue',unit:'pg',target:'22–24 per issue'},
+  comic_script:{label:'Issue',unit:'pg',target:'22'},
+  screenplay:{label:'Act',unit:'min',target:'90–120'},
+  tv_script:{label:'Episode',unit:'min',target:'30–60'},
+  stage_play:{label:'Act',unit:'scenes',target:''},
+  novel:{label:'Part',unit:'words',target:'80,000'},
+  poetry:{label:'Section',unit:'poems',target:''},
+  treatment:{label:'Section',unit:'pg',target:'10–20'},
+  game:{label:'Act',unit:'scenes',target:''},
+  series:{label:'Episode',unit:'min',target:''},
+  audio:{label:'Episode',unit:'min',target:''},
+  other:{label:'Section',unit:'units',target:''}
+};
+const STRUCT_TEMPLATES={
+  graphic_novel:[{title:'The Seeding',desc:'Setup. Ordinary lives. Powers manifest.',pages:'35'},{title:'The Emergence',desc:'Time passes. Trust builds.',pages:'15'},{title:'The Break',desc:'Everything changes.',pages:'20'},{title:'The Consequence',desc:'The cost.',pages:'20'},{title:'The Silence',desc:'What remains.',pages:'20'}],
+  comic_series:[{title:'Issue 1',desc:'Setup and inciting incident.',pages:'22'},{title:'Issue 2',desc:'Escalation.',pages:'22'},{title:'Issue 3',desc:'Midpoint reversal.',pages:'22'},{title:'Issue 4',desc:'Crisis.',pages:'22'},{title:'Issue 5',desc:'Resolution.',pages:'22'}],
+  comic_script:[{title:'Issue 1',desc:'Opening arc.',pages:'22'},{title:'Issue 2',desc:'Rising conflict.',pages:'22'},{title:'Issue 3',desc:'Resolution.',pages:'22'}],
+  screenplay:[{title:'Act I',desc:'Setup. Inciting incident.',pages:'25'},{title:'Act II-A',desc:'Confrontation rising.',pages:'25'},{title:'Act II-B',desc:'Midpoint reversal. Descent.',pages:'25'},{title:'Act III',desc:'Climax and resolution.',pages:'25'}],
+  tv_script:[{title:'Cold Open',desc:'Hook before titles.',pages:'5'},{title:'Act One',desc:'Setup and inciting incident.',pages:'12'},{title:'Act Two',desc:'Escalation and midpoint.',pages:'12'},{title:'Act Three',desc:'Crisis.',pages:'10'},{title:'Tag',desc:'Coda.',pages:'3'}],
+  stage_play:[{title:'Act One',desc:'Setup and inciting incident.',pages:''},{title:'Act Two',desc:'Escalation and climax.',pages:''},{title:'Act Three',desc:'Resolution.',pages:''}],
+  novel:[{title:'Part I',desc:'Beginning.',pages:'25000'},{title:'Part II',desc:'Middle.',pages:'35000'},{title:'Part III',desc:'End.',pages:'20000'}],
+  poetry:[{title:'Section I',desc:'Opening sequence.',pages:''},{title:'Section II',desc:'Development.',pages:''},{title:'Section III',desc:'Closing sequence.',pages:''}],
+  treatment:[{title:'Opening',desc:'World and character.',pages:'3'},{title:'Act One',desc:'Setup.',pages:'4'},{title:'Act Two',desc:'Conflict.',pages:'8'},{title:'Act Three',desc:'Resolution.',pages:'4'}],
+  game:[{title:'Act I',desc:'Tutorial and world introduction.',pages:''},{title:'Act II',desc:'Rising conflict.',pages:''},{title:'Act III',desc:'Final confrontation.',pages:''}],
+  series:[{title:'Pilot',desc:'World and character intro.',pages:''},{title:'Episode 2',desc:'',pages:''},{title:'Season Finale',desc:'',pages:''}],
+  audio:[{title:'Episode 1',desc:'Setup.',pages:''},{title:'Episode 2',desc:'',pages:''},{title:'Episode 3',desc:'',pages:''}],
+  default:[{title:'Act I',desc:'Setup.',pages:''},{title:'Act II',desc:'Confrontation.',pages:''},{title:'Act III',desc:'Resolution.',pages:''}]
+};
+
+// ── PERLISI DATA ──────────────────────────────────────────────────────────────
+function perlisiProject(){
+  return{
+    id:'perlisi_001',name:'PERLISI',format:'graphic_novel',genre:'Cosmic Horror / Science Fiction',
+    logline:"Aliens spend millions of years seeding humanity with heroes — only to use them as instruments of total extinction. Humanity's final chapter told as an elegy.",
+    status:'development',created:Date.now(),modified:Date.now(),driveFileId:null,targetLength:'100–120',
+    elegy:null,
+    characters:[
+      {id:1,name:'Barbara Grey',role:'Hero — North America 🇺🇸',age:'18 (manifestation) / 30 (transformation)',physical:'African American woman. Farm-raised.',arc:'From beloved symbol to extinction weapon, beginning with the brother who flew in from Harvard.',rels:'Parents (active farmers, 50s–60s). Marcus Grey — Harvard Law — FIRST KILL.',notes:'POWERS: Harnesses neutron star energy. Nuclear explosive force on impact. Touch incinerates living matter to ash — painful, total dissolution on contact.\n\nSTATUS: Ash\n\nFirst kill: Marcus Grey. Were together for the first time in years when the switch flipped. Her mother\'s voice once called her back from near-ignition at 18. Those same hands.',status:'Ash',image:null},
+      {id:2,name:'(Unnamed)',role:'Hero — Ireland 🇮🇪',age:'',physical:'',arc:'',rels:'',notes:'',status:'Dormant',image:null},
+      {id:3,name:'(Unnamed)',role:'Hero — South Korea 🇰🇷',age:'',physical:'',arc:'',rels:'',notes:'',status:'Dormant',image:null},
+      {id:4,name:'(Unnamed)',role:'Hero — Aboriginal Australia 🇦🇺',age:'',physical:'',arc:'',rels:'',notes:'Oldest continuous culture on Earth. That lineage ends with everyone else.',status:'Dormant',image:null},
+      {id:5,name:'(Unnamed)',role:'Hero — Palestine 🇵🇸',age:'',physical:'',arc:'',rels:'',notes:'',status:'Dormant',image:null},
+      {id:6,name:'(Unnamed)',role:'Hero — North Africa 🌍',age:'',physical:'',arc:'',rels:'',notes:'Specific country TBD — let the character determine the place.',status:'Dormant',image:null},
+      {id:7,name:'(Unnamed)',role:'Hero — South Africa 🌍',age:'',physical:'',arc:'',rels:'',notes:'Specific country TBD.',status:'Dormant',image:null},
+      {id:8,name:'(Unnamed)',role:'Hero — Brazil 🇧🇷',age:'',physical:'',arc:'',rels:'',notes:'',status:'Dormant',image:null},
+      {id:9,name:'(Unnamed)',role:'Hero — China 🇨🇳',age:'',physical:'',arc:'',rels:'',notes:'',status:'Dormant',image:null},
+      {id:10,name:'(Unnamed)',role:'Hero — Russia 🇷🇺',age:'',physical:'',arc:'',rels:'',notes:'',status:'Dormant',image:null},
+      {id:11,name:'(Unnamed)',role:'Hero — Greece 🇬🇷',age:'',physical:'',arc:'',rels:'',notes:'',status:'Dormant',image:null},
+      {id:12,name:'(Unnamed)',role:'Hero — Cuba 🇨🇺',age:'',physical:'',arc:'',rels:'',notes:'',status:'Dormant',image:null},
+      {id:13,name:'The Last Child',role:'Final Survivor',age:'Child',physical:'Unknown.',arc:'The last human on Earth. Sitting on a rock that was once the Amazon. Tears evaporate into dead soil. Then silence.',rels:'No one left.',notes:'Opens and closes the story. The cold open shows him on what looks like the Sahara — we don\'t know it\'s the dead Amazon until the ending. The geography is the final revelation.\n\nSTATUS: Last human alive, then gone.',status:'Final',image:null}
+    ],
+    structure:[
+      {id:1,title:'The Seeding',desc:'Ordinary lives. Powers manifest. The world falls in love.',pages:'35',open:false,scenes:[
+        {loc:'Dead Amazon — Cold Open',chars:'The Last Child',notes:'Kid on a rock. Looks like the Sahara. We don\'t know it\'s the dead Amazon. He tears up. We cut immediately to the farm. The geography is the ending.'},
+        {loc:'Midwest Farm — Grey household',chars:'Barbara, Marcus, Mom, Dad',notes:'Family breakfast. Warm, lived-in, funny. Reader needs to love this family before anything happens. Mid-cleanup — Barbara\'s powers manifest. Near-ignition. Mom\'s cries bring her back down.'}
+      ]},
+      {id:2,title:'The Emergence',desc:'12 years pass. Heroes become symbols. Trust builds at civilizational scale.',pages:'10',open:false,scenes:[
+        {loc:'Global — time compression',chars:'All 12',notes:'Each hero in their element. Loved. Public. Marcus flies in from Harvard — first time together in years.'}
+      ]},
+      {id:3,title:'Ships Arrive',desc:'The world looks to its heroes. The heroes transform.',pages:'22',open:false,scenes:[
+        {loc:'TBD — Barbara and Marcus',chars:'Barbara, Marcus',notes:'First time together in years. Marcus flew in from Harvard. The switch flips. Marcus is first. Reader has known him since the breakfast table.'}
+      ]},
+      {id:4,title:'The Harvest',desc:'87% eliminated. Transformed beings incinerated to ash by the ships. No explanation.',pages:'18',open:false,scenes:[
+        {loc:'Global',chars:'The 12 (transformed)',notes:'Impressionistic, not documentary. Show enough. Then the transformed are unmade from orbit — casually, like a used tool being discarded. No ceremony. No message. Earth left totally barren.'}
+      ]},
+      {id:5,title:'The Long Silence',desc:'Barren world. No plant life. No water. No wind. 13% run down to zero.',pages:'20',open:false,scenes:[
+        {loc:'Dead Amazon — the rock',chars:'The Last Child',notes:'Return to the cold open. Now we know where we are. The child cries. Tears disappear into dead soil before they can be absorbed. The crying stops. Forever silence. No plant. No animal. The wind itself no longer moves.'}
+      ]}
+    ],
+    storyboard:[{layout:'2h',data:null,panels:[]}],images:[],scenes2:[],scripts:[],
+    notes:{world:'',theme:'',visual:'',decisions:'No alien motive revealed. The humans\' perspective only. Last survivor is a child. Amazon indistinguishable from Sahara. No recovery. No future.',questions:'Africa hero locations. What were Barbara and Marcus doing when the switch flipped. Specific scene of transformation.',custom1:'',custom2:''},
+    settings:[
+      {id:1,name:'The Grey Farm',type:'Exterior / Interior',timeOfDay:'Morning',weather:'Clear — warm Midwest summer',description:'Cattle and chicken farm in the Midwest. The family home. The breakfast table. The yard where Barbara first launched into the sky.',significance:'The emotional anchor of Phase I. Everything warm lives here first.',scenes:'Phase 1 — family breakfast, powers manifest',notes:'The reader needs to love this place before it becomes memory.',images:[]},
+      {id:2,name:'The Rock — Dead Amazon',type:'Exterior',timeOfDay:'Late afternoon — dying light',weather:'Arid. No wind. No clouds. The sky is wrong.',description:'What was once the Amazon rainforest. Now indistinguishable from the Sahara. A single elevated rock overlooking the dead plain.',significance:'Opens the story and closes it. The geography is the final revelation — the lungs of the planet reduced to ash.',scenes:'Cold open, Phase 5 ending',notes:'Reader sees it as desert in the cold open. Only at the end do we understand what it was.',images:[]},
+      {id:3,name:'Global — The World',type:'Various',timeOfDay:'All hours',weather:'All conditions — before the harvest',description:'The full world during the emergence and harvest phases. Cities, public spaces, every inhabited corner of the planet.',significance:'The scale of what is lost.',scenes:'Phase 2 emergence montage, Phase 4 harvest',notes:'Impressionistic. Not documentary. Show enough.',images:[]}
+    ],
+    vehicles:[],
+    weapons:[],
+    scenes2:[],scripts:[],
+  };
+}
+
+// ── APP STATE ─────────────────────────────────────────────────────────────────
+let projects=[], currentId=null, settings={}, gToken=null, tokenClient=null;
+let expChar=null;
+let sbPages=[], sbCurPg=0, sbTool='pencil', sbIsDown=false, sbLx=0, sbLy=0, sbLineStart=null, sbUndo=[];
+
+function cur(){return projects.find(p=>p.id===currentId)||projects[0];}
+function getCur(){const p=cur();if(!p)return null;return p;}
+
+// ── SETTINGS ──────────────────────────────────────────────────────────────────
+function loadSettings(){settings=JSON.parse(localStorage.getItem('ferdowsi_settings')||'{}');applySettings();}
+function applySettings(){
+  const el=id=>document.getElementById(id);
+  
+  if(el('set-ak'))el('set-ak').value=settings.anthropicKey||'';
+  if(el('set-gcid'))el('set-gcid').value=settings.googleClientId||'';
+}
+function showSettings(){
+  const el=id=>document.getElementById(id);
+  if(el('set-ak'))el('set-ak').value=settings.anthropicKey||'';
+  if(el('set-gcid'))el('set-gcid').value=settings.googleClientId||'';
+  showModal('settings-modal');
+}
+function saveSettings(){
+  settings.anthropicKey=v('set-ak');settings.googleClientId=v('set-gcid');
+  
+  localStorage.setItem('ferdowsi_settings',JSON.stringify(settings));
+  applySettings();closeModal('settings-modal');showSaved();
+  if(settings.googleClientId)initTokenClient();
+}
+function v(id){return(document.getElementById(id)||{}).value||'';}
+
+// ── PROJECTS ──────────────────────────────────────────────────────────────────
+function loadProjects(){
+  const saved=JSON.parse(localStorage.getItem('ferdowsi_projects')||'null');
+  if(saved&&saved.length){projects=saved;}
+  else{projects=[perlisiProject()];saveAllProjects();}
+  currentId=localStorage.getItem('ferdowsi_current')||projects[0].id;
+  if(!projects.find(p=>p.id===currentId))currentId=projects[0].id;
+}
+function saveAllProjects(){
+  localStorage.setItem('ferdowsi_projects',JSON.stringify(projects));
+  localStorage.setItem('ferdowsi_current',currentId);
+}
+let saveT;
+function schedSave(){clearTimeout(saveT);saveT=setTimeout(doSave,700);}
+function doSave(){saveAllProjects();showSaved();}
+function showSaved(){const el=document.getElementById('saved');el.classList.add('show');setTimeout(()=>el.classList.remove('show'),1100);}
+
+function switchProject(id){
+  currentId=id;
+  const p=getCur();
+  sbPages=p.storyboard&&p.storyboard.length?p.storyboard:[{layout:'2h',data:null,panels:[]}];sbCurPg=0;
+  expChar=null;expSetting=null;expVehicle=null;expWeapon=null;curSceneId=null;curScriptId=null;
+  updateHeader();renderCharGrid();renderSettingGrid();renderVehicleGrid();renderWeaponGrid();renderStruct();renderNotes();
+  if(document.getElementById('sb-canvas')&&document.getElementById('sb-canvas')._init)restoreSbPage();
+  closeProjPanel();
+}
+function updateHeader(){
+  const p=getCur();if(!p)return;
+  document.getElementById('hdr-proj-name').textContent=p.name;
+  document.getElementById('hdr-proj-format').textContent=FORMAT_LABELS[p.format]||p.format;
+  updateBudget();
+
+  const sl=FORMAT_STRUCT[p.format]||FORMAT_STRUCT.other;
+  document.getElementById('budget-label').textContent=sl.label+' Budget';
+  document.getElementById('btarget').textContent=` / ${p.targetLength||sl.target||'?'}`;
+  document.getElementById('chars-title').textContent='Characters / Cast';
+  document.getElementById('struct-title').textContent='Story Structure — '+(sl.label+'s');
+}
+function updateBudget(){
+  const p=getCur();if(!p)return;
+  const t=(p.structure||[]).reduce((s,u)=>s+(parseFloat(u.pages)||0),0);
+  const tgt=parseFloat((p.targetLength||'120').replace(/[^0-9]/g,''))||120;
+  const pct=Math.min((t/tgt)*100,100);
+  const f=document.getElementById('bfill'),u=document.getElementById('bused');
+  if(f){f.style.width=pct+'%';f.className='bfill'+(t>tgt?' over':'');}
+  if(u)u.textContent=t;
+}
+
+// ── PROJECT PANEL ─────────────────────────────────────────────────────────────
+// ── MEDIUM DEFINITIONS ────────────────────────────────────────────────────────
+const MEDIUMS=[
+  {id:'graphic_novel', icon:'📓', name:'Graphic Novel',    scriptFmt:'comic'},
+  {id:'comic_series',  icon:'📚', name:'Comic Series',     scriptFmt:'comic'},
+  {id:'comic_script',  icon:'✏',  name:'Comic Script',     scriptFmt:'comic'},
+  {id:'screenplay',    icon:'🎬', name:'Screenplay',       scriptFmt:'screenplay'},
+  {id:'tv_script',     icon:'📺', name:'TV Script',        scriptFmt:'tv'},
+  {id:'stage_play',    icon:'🎭', name:'Stage Play',       scriptFmt:'stage'},
+  {id:'novel',         icon:'📖', name:'Novel',            scriptFmt:'novel'},
+  {id:'poetry',        icon:'✒',  name:'Poetry / Verse',  scriptFmt:'poetry'},
+  {id:'treatment',     icon:'📋', name:'Treatment',        scriptFmt:'treatment'},
+  {id:'game',          icon:'🎮', name:'Game Narrative',   scriptFmt:'treatment'},
+  {id:'series',        icon:'🎞', name:'Live / Animated',  scriptFmt:'tv'},
+  {id:'audio',         icon:'🎙', name:'Audio Drama',      scriptFmt:'screenplay'},
+  {id:'other',         icon:'✦',  name:'Other',            scriptFmt:'screenplay'},
+];
+
+function renderMediumGrid(containerId, selectedId, onSelect){
+  const g=document.getElementById(containerId);if(!g)return;g.innerHTML='';
+  MEDIUMS.forEach(m=>{
+    const btn=document.createElement('button');btn.className='medium-btn'+(m.id===selectedId?' on':'');
+    btn.innerHTML=`<span class="medium-icon">${m.icon}</span><span class="medium-name">${m.name}</span>`;
+    btn.onclick=()=>{onSelect(m.id);document.querySelectorAll(`#${containerId} .medium-btn`).forEach(b=>b.classList.remove('on'));btn.classList.add('on');};
+    g.appendChild(btn);
+  });
+}
+
+function renderProjPanel(){
+  const p=getCur();
+  // Current project strip
+  const pname=document.getElementById('pp-cur-name');const pmeta=document.getElementById('pp-cur-meta');
+  if(pname&&p)pname.textContent=p.name||'Untitled';
+  if(pmeta&&p)pmeta.textContent=(FORMAT_LABELS[p.format]||p.format)+(p.genre?' · '+p.genre:'')+(p.modified?' · Last saved '+new Date(p.modified).toLocaleDateString():'');
+  // Medium grid — changes current project format
+  renderMediumGrid('medium-grid',p?.format||'graphic_novel',(newFmt)=>{
+    const cp=getCur();if(!cp)return;
+    cp.format=newFmt;cp.modified=Date.now();
+    updateHeader();saveAllProjects();showSaved();
+  });
+  // Project grid
+  const g=document.getElementById('proj-grid');if(!g)return;g.innerHTML='';
+  projects.forEach(proj=>{
+    const card=document.createElement('div');card.className='proj-card'+(proj.id===currentId?' active':'');
+    const med=MEDIUMS.find(m=>m.id===proj.format)||{icon:'✦',name:proj.format||'Other'};
+    const mod=proj.modified?new Date(proj.modified).toLocaleDateString():'';
+    card.innerHTML=`<div class="pc-actions">
+      <button class="pc-act-btn" onclick="event.stopPropagation();duplicateProject('${proj.id}')">Dupe</button>
+      <button class="pc-act-btn danger" onclick="event.stopPropagation();deleteProject('${proj.id}')">Del</button>
+    </div>
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px">
+      <span style="font-size:20px">${med.icon}</span>
+      <div><div class="pc-name">${e(proj.name||'Untitled')}</div><div class="pc-format">${med.name}${proj.genre?' · '+proj.genre:''}</div></div>
+    </div>
+    <div class="pc-logline">${e(proj.logline||'No logline yet.')}</div>
+    <div class="pc-meta"><span>${mod}</span>${proj.driveFileId?'<span style="color:var(--grntxt)">● Drive</span>':''}</div>`;
+    card.onclick=()=>switchProject(proj.id);
+    g.appendChild(card);
+  });
+}
+
+function toggleProjPanel(){
+  const el=document.getElementById('proj-panel');
+  el.classList.toggle('show');
+  if(el.classList.contains('show'))renderProjPanel();
+}
+function closeProjPanel(){document.getElementById('proj-panel').classList.remove('show');}
+function closeProjPanelOutside(ev){if(ev.target===document.getElementById('proj-panel'))closeProjPanel();}
+
+function newProjectGated(){
+  showModal('save-warn-modal');
+}
+
+// ── NEW PROJECT ───────────────────────────────────────────────────────────────
+function createProject(){
+  const name=v('np-name')||'Untitled Story';
+  const format=v('np-format')||'graphic_novel';
+  const sl=FORMAT_STRUCT[format]||FORMAT_STRUCT.other;
+  const tmpl=STRUCT_TEMPLATES[format]||STRUCT_TEMPLATES.default;
+  const med=MEDIUMS.find(m=>m.id===format);
+  const scriptFmt=med?.scriptFmt||'screenplay';
+  const sdef=BLOCK_DEFS[scriptFmt]||BLOCK_DEFS.screenplay;
+  const id='proj_'+Date.now();
+  const proj={
+    id,name,format,genre:v('np-genre'),logline:v('np-logline'),status:'development',
+    created:Date.now(),modified:Date.now(),driveFileId:null,targetLength:v('np-length')||sl.target,
+    elegy:null,characters:[],
+    structure:tmpl.map((t,i)=>({id:i+1,title:t.title,desc:t.desc,pages:t.pages||'',open:false,scenes:[]})),
+    storyboard:[{layout:'2h',data:null,panels:[]}],images:[],scenes2:[],
+    settings:[],vehicles:[],weapons:[],
+    scripts:[{id:'scr_'+Date.now(),title:name,format:scriptFmt,created:Date.now(),modified:Date.now(),
+      blocks:[{id:'bl_0',type:sdef.defaultFirst,text:sdef.defaultFirstText}]}],
+    notes:{world:'',theme:'',visual:'',decisions:'',questions:''},
+  };
+  projects.push(proj);currentId=id;saveAllProjects();
+  closeModal('new-proj-modal');
+  ['np-name','np-genre','np-logline','np-length'].forEach(fid=>{const el=document.getElementById(fid);if(el)el.value='';});
+  document.getElementById('np-format').value='graphic_novel';
+  switchProject(id);
+}
+
+function showNewProjModal(){
+  // Populate medium grid in new project modal
+  renderMediumGrid('np-medium-grid','graphic_novel',(fmt)=>{
+    document.getElementById('np-format').value=fmt;
+  });
+  showModal('new-proj-modal');
+}
+function duplicateProject(id){
+  const src=projects.find(p=>p.id===id);if(!src)return;
+  const copy=JSON.parse(JSON.stringify(src));
+  copy.id='proj_'+Date.now();copy.name=src.name+' (copy)';copy.driveFileId=null;copy.created=Date.now();copy.modified=Date.now();
+  projects.push(copy);saveAllProjects();renderProjPanel();
+}
+function deleteProject(id){
+  if(projects.length<=1){alert('Cannot delete the only project.');return;}
+  if(!confirm('Delete this project? This cannot be undone.'))return;
+  projects=projects.filter(p=>p.id!==id);
+  if(currentId===id)currentId=projects[0].id;
+  saveAllProjects();renderProjPanel();switchProject(currentId);
+}
+function exportProjectJSON(){
+  const p=getCur();if(!p)return;
+  const a=document.createElement('a');a.download='ferdowsi_'+p.name.replace(/[^a-z0-9]/gi,'_').toLowerCase()+'.json';
+  a.href='data:application/json;charset=utf-8,'+encodeURIComponent(JSON.stringify(p,null,2));a.click();
+}
+function importProjectFile(){
+  const inp=document.createElement('input');inp.type='file';inp.accept='.json';
+  inp.onchange=ev=>{
+    const file=ev.target.files[0];if(!file)return;
+    const r=new FileReader();r.onload=e=>{
+      try{const p=JSON.parse(e.target.result);if(!p.id)p.id='proj_'+Date.now();if(!p.name)p.name='Imported';projects.push(p);saveAllProjects();renderProjPanel();}catch(err){alert('Invalid project file.');}
+    };r.readAsText(file);
+  };inp.click();
+}
+
+// ── IMAGE UTILITIES ────────────────────────────────────────────────────────────
+async function compressImg(file,maxW,maxH,q){
+  return new Promise(res=>{
+    const reader=new FileReader();
+    reader.onload=ev=>{
+      const img=new Image();
+      img.onload=()=>{
+        let w=img.width,h=img.height;
+        if(w>maxW){h=Math.round(h*maxW/w);w=maxW;}
+        if(h>maxH){w=Math.round(w*maxH/h);h=maxH;}
+        const c=document.createElement('canvas');c.width=w;c.height=h;
+        c.getContext('2d').drawImage(img,0,0,w,h);
+        res(c.toDataURL('image/jpeg',q||.75));
+      };
+      img.src=ev.target.result;
+    };
+    reader.readAsDataURL(file);
+  });
+}
+function pickImg(cb,maxW,maxH,q){
+  const inp=document.createElement('input');inp.type='file';inp.accept='image/*';
+  inp.onchange=async ev=>{const file=ev.target.files[0];if(!file)return;cb(await compressImg(file,maxW||800,maxH||1000,q||.75));};
+  inp.click();
+}
+
+// ── CHARACTERS ────────────────────────────────────────────────────────────────
+function e(s){return(s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+function renderCharGrid(){
+  const p=getCur();const g=document.getElementById('char-grid');if(!g||!p)return;g.innerHTML='';
+  (p.characters||[]).forEach(ch=>{
+    const card=document.createElement('div');card.className='char-card'+(expChar===ch.id?' exp':'');
+    const init=(ch.name||'?')[0].toUpperCase();
+    const avatarHtml=ch.image
+      ?`<div class="cc-avatar" onclick="event.stopPropagation();uploadCharImg(${ch.id})" title="Click to change image"><img src="${ch.image}" alt=""></div>`
+      :`<div class="cc-avatar" onclick="event.stopPropagation();uploadCharImg(${ch.id})" title="Click to add image">${init}</div>`;
+    card.innerHTML=`<div class="cc-hdr" onclick="togChar(${ch.id})">
+      ${avatarHtml}
+      <div class="cc-info">
+        <div class="cc-name${ch.name&&ch.name!=='(Unnamed)'?'':' empty'}">${e(ch.name||'Unnamed')}</div>
+        <div class="cc-role">${e(ch.role||'')}</div>
+        ${ch.arc?`<div class="cc-arc">${e(ch.arc.substring(0,55))}…</div>`:''}
+      </div>
+      ${ch.status?`<div class="cc-status">${e(ch.status)}</div>`:''}
+    </div>${expChar===ch.id?charBody(ch):''}`;
+    g.appendChild(card);
+  });
+}
+function charBody(ch){
+  const imgHtml=ch.image
+    ?`<div class="char-img-frame" onclick="uploadCharImg(${ch.id})" title="Click to change"><img src="${ch.image}" alt=""></div>`
+    :`<div class="char-img-frame" onclick="uploadCharImg(${ch.id})" title="Click to upload"><div class="char-img-empty"><div>+</div><span>Add Image</span></div></div>`;
+  return`<div class="cc-exp"><div class="cc-grid">
+    <div class="char-img-area">
+      ${imgHtml}
+      <div class="char-img-btns">
+        <button class="bghost" style="font-size:9px;padding:5px 10px" onclick="uploadCharImg(${ch.id})">${ch.image?'Change':'Upload'} Image</button>
+        ${ch.image?`<button class="bghost" style="font-size:9px;padding:5px 10px;color:var(--acc);border-color:var(--acc2)" onclick="removeCharImg(${ch.id})">Remove</button>`:''}
+        <div style="font-size:9px;color:var(--txt3);line-height:1.5;margin-top:4px;max-width:140px">Character reference art, concept, or portrait.</div>
+      </div>
+    </div>
+    <div class="fg"><label class="fl">Name</label><input class="fi" type="text" value="${e(ch.name)}" placeholder="Full name" onchange="upChar(${ch.id},'name',this.value)"></div>
+    <div class="fg"><label class="fl">Role</label><input class="fi" type="text" value="${e(ch.role)}" placeholder="Protagonist, antagonist…" onchange="upChar(${ch.id},'role',this.value)"></div>
+    <div class="fg"><label class="fl">Age / Status</label><input class="fi" type="text" value="${e(ch.status)}" placeholder="Age or status" onchange="upChar(${ch.id},'status',this.value)"></div>
+    <div class="fg full"><label class="fl">Physical Description</label><input class="fi" type="text" value="${e(ch.physical)}" placeholder="Key visual traits" onchange="upChar(${ch.id},'physical',this.value)"></div>
+    <div class="fg full"><label class="fl">Character Arc</label><textarea class="fi" onchange="upChar(${ch.id},'arc',this.value)">${e(ch.arc)}</textarea></div>
+    <div class="fg full"><label class="fl">Key Relationships</label><textarea class="fi" onchange="upChar(${ch.id},'rels',this.value)">${e(ch.rels)}</textarea></div>
+    <div class="fg full"><label class="fl">Notes / Custom Fields</label><textarea class="fi" style="min-height:90px" onchange="upChar(${ch.id},'notes',this.value)">${e(ch.notes)}</textarea></div>
+    <div class="fg full" style="display:flex;justify-content:flex-end;margin-top:4px">
+      <button class="bghost" style="color:var(--acc);border-color:var(--acc2)" onclick="delChar(${ch.id})">Remove Character</button>
+    </div>
+  </div></div>`;
+}
+function togChar(id){expChar=expChar===id?null:id;renderCharGrid();}
+function upChar(id,f,v){const p=getCur();const ch=(p.characters||[]).find(x=>x.id===id);if(ch){ch[f]=v;schedSave();}}
+function uploadCharImg(id){pickImg(data=>{const p=getCur();const ch=(p.characters||[]).find(x=>x.id===id);if(ch){ch.image=data;schedSave();renderCharGrid();}},400,500,.8);}
+function removeCharImg(id){const p=getCur();const ch=(p.characters||[]).find(x=>x.id===id);if(ch){ch.image=null;schedSave();renderCharGrid();}}
+function addChar(){
+  const p=getCur();if(!p)return;
+  const ids=(p.characters||[]).map(c=>c.id);const newId=ids.length?Math.max(...ids)+1:1;
+  p.characters=p.characters||[];
+  p.characters.push({id:newId,name:'',role:'',age:'',physical:'',arc:'',rels:'',notes:'',status:'',image:null});
+  expChar=newId;renderCharGrid();schedSave();
+}
+function delChar(id){
+  const p=getCur();if(!p)return;
+  if(!confirm('Remove this character?'))return;
+  p.characters=(p.characters||[]).filter(c=>c.id!==id);
+  if(expChar===id)expChar=null;renderCharGrid();schedSave();
+}
+
+// ── SETTINGS ──────────────────────────────────────────────────────────────────
+let expSetting=null;
+function renderSettingGrid(){
+  const p=getCur();const g=document.getElementById('setting-grid');if(!g||!p)return;g.innerHTML='';
+  (p.settings||[]).forEach(loc=>{
+    const card=document.createElement('div');card.className='loc-card'+(expSetting===loc.id?' exp':'');
+    const primaryImg=loc.images&&loc.images.length?loc.images[0]:null;
+    const coverHtml=primaryImg
+      ?`<div class="loc-cover"><img src="${primaryImg}" alt=""><button class="loc-cover-add" onclick="event.stopPropagation();addSettingImg(${loc.id})">+ Image</button></div>`
+      :`<div class="loc-cover"><div class="loc-cover-ph">⬡</div><button class="loc-cover-add" onclick="event.stopPropagation();addSettingImg(${loc.id})">+ Image</button></div>`;
+    card.innerHTML=`${coverHtml}
+      <div class="loc-info" onclick="togSetting(${loc.id})">
+        <div class="loc-name${loc.name?'':' empty'}">${e(loc.name||'Unnamed Setting')}</div>
+        <div class="loc-type">${e(loc.type||'')}${loc.timeOfDay?' · '+loc.timeOfDay:''}${loc.weather?' · '+loc.weather:''}</div>
+      </div>
+      ${expSetting===loc.id?settingBody(loc):''}`;
+    g.appendChild(card);
+  });
+}
+function settingBody(loc){
+  const imgs=(loc.images||[]).map((img,i)=>`<div class="loc-img-thumb"><img src="${img}" alt="" onclick="settingImgZoom(${loc.id},${i})"><button class="loc-img-del" onclick="delSettingImg(${loc.id},${i})">×</button></div>`).join('');
+  return`<div class="loc-exp">
+    <div class="loc-img-strip" style="margin-top:14px">
+      ${imgs}
+      <div class="loc-img-add" onclick="addSettingImg(${loc.id})"><div style="font-size:20px">+</div><span>Add Image</span></div>
+    </div>
+    <div class="loc-grid3">
+      <div class="fg"><label class="fl">Name</label><input class="fi" type="text" value="${e(loc.name)}" placeholder="Setting name" onchange="upSetting(${loc.id},'name',this.value)"></div>
+      <div class="fg"><label class="fl">Type</label><input class="fi" type="text" value="${e(loc.type)}" placeholder="Interior, Exterior, Fantasy…" onchange="upSetting(${loc.id},'type',this.value)"></div>
+      <div class="fg"><label class="fl">Scenes Used In</label><input class="fi" type="text" value="${e(loc.scenes)}" placeholder="Phase 1, Act 2…" onchange="upSetting(${loc.id},'scenes',this.value)"></div>
+      <div class="fg"><label class="fl">Time of Day</label><input class="fi" type="text" value="${e(loc.timeOfDay||'')}" placeholder="Dawn, midday, night…" onchange="upSetting(${loc.id},'timeOfDay',this.value)"></div>
+      <div class="fg"><label class="fl">Weather / Conditions</label><input class="fi" type="text" value="${e(loc.weather||'')}" placeholder="Clear, overcast, storm, arid…" onchange="upSetting(${loc.id},'weather',this.value)"></div>
+      <div class="fg"><label class="fl">Season / Era</label><input class="fi" type="text" value="${e(loc.season||'')}" placeholder="Summer 2031, post-harvest…" onchange="upSetting(${loc.id},'season',this.value)"></div>
+      <div class="fg full"><label class="fl">Description</label><textarea class="fi" onchange="upSetting(${loc.id},'description',this.value)">${e(loc.description)}</textarea></div>
+      <div class="fg full"><label class="fl">Story Significance</label><textarea class="fi" onchange="upSetting(${loc.id},'significance',this.value)">${e(loc.significance)}</textarea></div>
+      <div class="fg full"><label class="fl">Lighting / Atmosphere Notes</label><textarea class="fi" placeholder="Colour temperature, shadows, mood, what the artist needs to know…" onchange="upSetting(${loc.id},'atmosphere',this.value)">${e(loc.atmosphere||'')}</textarea></div>
+      <div class="fg full"><label class="fl">Notes</label><textarea class="fi" onchange="upSetting(${loc.id},'notes',this.value)">${e(loc.notes)}</textarea></div>
+      <div class="fg full" style="display:flex;justify-content:flex-end;margin-top:4px">
+        <button class="bghost" style="color:var(--acc);border-color:var(--acc2)" onclick="delSetting(${loc.id})">Remove Setting</button>
+      </div>
+    </div>
+  </div>`;
+}
+function togSetting(id){expSetting=expSetting===id?null:id;renderSettingGrid();}
+function upSetting(id,f,v){const p=getCur();const s=(p.settings||[]).find(x=>x.id===id);if(s){s[f]=v;schedSave();}}
+function addSetting(){
+  const p=getCur();if(!p)return;
+  const ids=(p.settings||[]).map(l=>l.id);const newId=ids.length?Math.max(...ids)+1:1;
+  p.settings=p.settings||[];
+  p.settings.push({id:newId,name:'',type:'',timeOfDay:'',weather:'',season:'',description:'',significance:'',atmosphere:'',scenes:'',notes:'',images:[]});
+  expSetting=newId;renderSettingGrid();schedSave();
+}
+function delSetting(id){
+  const p=getCur();if(!p)return;
+  if(!confirm('Remove this setting?'))return;
+  p.settings=(p.settings||[]).filter(l=>l.id!==id);
+  if(expSetting===id)expSetting=null;renderSettingGrid();schedSave();
+}
+function addSettingImg(id){
+  pickImg(data=>{const p=getCur();const s=(p.settings||[]).find(x=>x.id===id);if(s){s.images=s.images||[];s.images.push(data);schedSave();renderSettingGrid();}},1200,900,.8);
+}
+function delSettingImg(id,idx){const p=getCur();const s=(p.settings||[]).find(x=>x.id===id);if(s&&s.images){s.images.splice(idx,1);schedSave();renderSettingGrid();}}
+function settingImgZoom(id,idx){const p=getCur();const s=(p.settings||[]).find(x=>x.id===id);if(!s||!s.images[idx])return;const w=window.open('');w.document.write(`<html><body style="margin:0;background:#000;display:flex;align-items:center;justify-content:center;min-height:100vh"><img src="${s.images[idx]}" style="max-width:100%;max-height:100vh"></body></html>`);}
+
+// ── VEHICLES ──────────────────────────────────────────────────────────────────
+let expVehicle=null;
+const VEHICLE_ICON='🚗';
+function renderVehicleGrid(){
+  const p=getCur();const g=document.getElementById('vehicle-grid');if(!g||!p)return;g.innerHTML='';
+  (p.vehicles||[]).forEach(a=>g.appendChild(makeAssetCard(a,'vehicle')));
+}
+// ── WEAPONS / TOOLS ───────────────────────────────────────────────────────────
+let expWeapon=null;
+const WEAPON_ICON='⚔';
+function renderWeaponGrid(){
+  const p=getCur();const g=document.getElementById('weapon-grid');if(!g||!p)return;g.innerHTML='';
+  (p.weapons||[]).forEach(a=>g.appendChild(makeAssetCard(a,'weapon')));
+}
+
+// ── SHARED ASSET CARD (vehicles + weapons share same structure) ───────────────
+function getAssetArr(type){const p=getCur();return type==='vehicle'?(p.vehicles=p.vehicles||[]):(p.weapons=p.weapons||[]);}
+function getExpId(type){return type==='vehicle'?expVehicle:expWeapon;}
+function setExpId(type,id){if(type==='vehicle')expVehicle=id;else expWeapon=id;}
+function reRenderAsset(type){if(type==='vehicle')renderVehicleGrid();else renderWeaponGrid();}
+function makeAssetCard(a,type){
+  const card=document.createElement('div');
+  card.className='asset-card'+(getExpId(type)===a.id?' exp':'');
+  const pri=a.images&&a.images.length?a.images[0]:null;
+  const icon=type==='vehicle'?VEHICLE_ICON:WEAPON_ICON;
+  card.innerHTML=`<div class="asset-cover">${pri?`<img src="${pri}" alt="">`:`<div class="asset-cover-ph">${icon}</div>`}<button class="asset-cover-add" onclick="event.stopPropagation();addAssetImg('${type}',${a.id})">+ Image</button></div>
+    <div class="asset-info" onclick="togAsset('${type}',${a.id})">
+      <div class="asset-name${a.name?'':' empty'}">${e(a.name||'Unnamed')}</div>
+      <div class="asset-type">${e(a.type||'')}${a.owner?' · '+a.owner:''}</div>
+    </div>
+    ${getExpId(type)===a.id?assetBody(a,type):''}`;
+  return card;
+}
+function assetBody(a,type){
+  const isVehicle=type==='vehicle';
+  const imgs=(a.images||[]).map((img,i)=>`<div class="asset-img-thumb"><img src="${img}" alt="" onclick="assetImgZoom('${type}',${a.id},${i})"><button class="asset-img-del" onclick="delAssetImg('${type}',${a.id},${i})">×</button></div>`).join('');
+  const extraFields=isVehicle
+    ?`<div class="fg"><label class="fl">Era / Year</label><input class="fi" type="text" value="${e(a.era||'')}" placeholder="2024, post-collapse…" onchange="upAsset('${type}',${a.id},'era',this.value)"></div>
+      <div class="fg"><label class="fl">Condition</label><input class="fi" type="text" value="${e(a.condition||'')}" placeholder="Mint, battle-worn, wrecked…" onchange="upAsset('${type}',${a.id},'condition',this.value)"></div>`
+    :`<div class="fg"><label class="fl">Status / Condition</label><input class="fi" type="text" value="${e(a.condition||'')}" placeholder="Functional, broken, modified…" onchange="upAsset('${type}',${a.id},'condition',this.value)"></div>
+      <div class="fg"><label class="fl">Story Role</label><input class="fi" type="text" value="${e(a.role||'')}" placeholder="Accessory, heirloom, tool of survival…" onchange="upAsset('${type}',${a.id},'role',this.value)"></div>`;
+  return`<div class="asset-exp">
+    <div class="asset-img-strip">${imgs}<div class="asset-img-add" onclick="addAssetImg('${type}',${a.id})"><div style="font-size:18px">+</div><span>Add Image</span></div></div>
+    <div class="loc-grid3">
+      <div class="fg"><label class="fl">Name</label><input class="fi" type="text" value="${e(a.name)}" placeholder="${isVehicle?'Vehicle name':'Accessory name'}" onchange="upAsset('${type}',${a.id},'name',this.value)"></div>
+      <div class="fg"><label class="fl">Type</label><input class="fi" type="text" value="${e(a.type)}" placeholder="${isVehicle?'Car, truck, aircraft, ship…':'Firearm, blade, explosive, tech…'}" onchange="upAsset('${type}',${a.id},'type',this.value)"></div>
+      <div class="fg"><label class="fl">Owner / Character</label><input class="fi" type="text" value="${e(a.owner||'')}" placeholder="Who uses or owns this" onchange="upAsset('${type}',${a.id},'owner',this.value)"></div>
+      ${extraFields}
+      <div class="fg"><label class="fl">Scenes Used In</label><input class="fi" type="text" value="${e(a.scenes||'')}" placeholder="Phase 1, Act 2…" onchange="upAsset('${type}',${a.id},'scenes',this.value)"></div>
+      <div class="fg full"><label class="fl">Description</label><textarea class="fi" onchange="upAsset('${type}',${a.id},'description',this.value)">${e(a.description||'')}</textarea></div>
+      <div class="fg full"><label class="fl">Story Significance / Notes</label><textarea class="fi" onchange="upAsset('${type}',${a.id},'notes',this.value)">${e(a.notes||'')}</textarea></div>
+      <div class="fg full" style="display:flex;justify-content:flex-end;margin-top:4px">
+        <button class="bghost" style="color:var(--acc);border-color:var(--acc2)" onclick="delAsset('${type}',${a.id})">Remove</button>
+      </div>
+    </div>
+  </div>`;
+}
+function togAsset(type,id){const cur=getExpId(type);setExpId(type,cur===id?null:id);reRenderAsset(type);}
+function upAsset(type,id,f,v){const arr=getAssetArr(type);const a=arr.find(x=>x.id===id);if(a){a[f]=v;schedSave();}}
+function addVehicle(){
+  const arr=getAssetArr('vehicle');const ids=arr.map(a=>a.id);const newId=ids.length?Math.max(...ids)+1:1;
+  arr.push({id:newId,name:'',type:'',owner:'',era:'',condition:'',scenes:'',description:'',notes:'',images:[]});
+  setExpId('vehicle',newId);renderVehicleGrid();schedSave();
+}
+function addWeapon(){
+  const arr=getAssetArr('weapon');const ids=arr.map(a=>a.id);const newId=ids.length?Math.max(...ids)+1:1;
+  arr.push({id:newId,name:'',type:'',owner:'',condition:'',role:'',scenes:'',description:'',notes:'',images:[]});
+  setExpId('weapon',newId);renderWeaponGrid();schedSave();
+}
+function delAsset(type,id){
+  if(!confirm('Remove this item?'))return;
+  const p=getCur();
+  if(type==='vehicle')p.vehicles=(p.vehicles||[]).filter(a=>a.id!==id);
+  else p.weapons=(p.weapons||[]).filter(a=>a.id!==id);
+  setExpId(type,null);reRenderAsset(type);schedSave();
+}
+function addAssetImg(type,id){
+  pickImg(data=>{const arr=getAssetArr(type);const a=arr.find(x=>x.id===id);if(a){a.images=a.images||[];a.images.push(data);schedSave();reRenderAsset(type);}},1200,900,.8);
+}
+function delAssetImg(type,id,idx){const arr=getAssetArr(type);const a=arr.find(x=>x.id===id);if(a&&a.images){a.images.splice(idx,1);schedSave();reRenderAsset(type);}}
+function assetImgZoom(type,id,idx){const arr=getAssetArr(type);const a=arr.find(x=>x.id===id);if(!a||!a.images[idx])return;const w=window.open('');w.document.write(`<html><body style="margin:0;background:#000;display:flex;align-items:center;justify-content:center;min-height:100vh"><img src="${a.images[idx]}" style="max-width:100%;max-height:100vh"></body></html>`);}
+
+// ── SCENE SYSTEM ─────────────────────────────────────────────────────────────
+let curSceneId=null,calViewYear=new Date().getFullYear(),calViewMonth=new Date().getMonth();
+
+// ── COLOR UTILITIES ──────────────────────────────────────────────────────────
+function hexToHSL(hex){
+  let r=parseInt(hex.slice(1,3),16)/255,g=parseInt(hex.slice(3,5),16)/255,b=parseInt(hex.slice(5,7),16)/255;
+  const mx=Math.max(r,g,b),mn=Math.min(r,g,b);let h,s,l=(mx+mn)/2;
+  if(mx===mn){h=s=0;}else{const d=mx-mn;s=l>.5?d/(2-mx-mn):d/(mx+mn);
+    switch(mx){case r:h=(g-b)/d+(g<b?6:0);break;case g:h=(b-r)/d+2;break;default:h=(r-g)/d+4;}h*=60;}
+  return{h:h%360,s:s*100,l:l*100};
+}
+function hslToHex(h,s,l){
+  h=((h%360)+360)%360;s/=100;l/=100;
+  const a=s*Math.min(l,1-l);
+  const f=n=>{const k=(n+h/30)%12;const c=l-a*Math.max(Math.min(k-3,9-k,1),-1);return Math.round(255*c).toString(16).padStart(2,'0');};
+  return`#${f(0)}${f(8)}${f(4)}`;
+}
+function genHarmonies(hex){
+  const{h,s,l}=hexToHSL(hex);
+  return{
+    complementary:[hex,hslToHex(h+180,s,l)],
+    analogous:[hslToHex(h-30,s,l),hex,hslToHex(h+30,s,l)],
+    splitComp:[hex,hslToHex(h+150,s,l),hslToHex(h+210,s,l)],
+    triadic:[hex,hslToHex(h+120,s,l),hslToHex(h+240,s,l)],
+    tetradic:[hex,hslToHex(h+90,s,l),hslToHex(h+180,s,l),hslToHex(h+270,s,l)],
+    splitWarm:[hex,hslToHex(h+30,s,Math.max(l-15,10)),hslToHex(h-30,s,Math.min(l+15,90))]
+  };
+}
+
+// ── MOOD PRESETS ─────────────────────────────────────────────────────────────
+const MOODS=[
+  {id:'noir',name:'Film Noir',key:'#c8a030',shadow:'#0a0a0a',hi:'#e8e0c8',desc:'Near-mono + amber accent'},
+  {id:'golden',name:'Golden Hour',key:'#f49020',shadow:'#6a2008',hi:'#fce090',desc:'Warm amber, long shadows'},
+  {id:'cold_horror',name:'Cold Horror',key:'#4a7aaa',shadow:'#0a0e14',hi:'#b0c8e0',desc:'Desaturated blue-gray'},
+  {id:'blood_fire',name:'Blood & Fire',key:'#c02010',shadow:'#1a0404',hi:'#f06030',desc:'Deep reds, ember orange'},
+  {id:'ash',name:'Post-Apo Ash',key:'#786858',shadow:'#181210',hi:'#c8b8a8',desc:'Bone-gray, dust, ruin'},
+  {id:'jungle',name:'Jungle',key:'#3a8a30',shadow:'#0a1808',hi:'#b0e060',desc:'High-sat greens, wet heat'},
+  {id:'cyberpunk',name:'Neon Noir',key:'#e020c0',shadow:'#04000e',hi:'#00e8f8',desc:'Deep navy, electric neon'},
+  {id:'sepia',name:'Period / Sepia',key:'#b8904a',shadow:'#2a1808',hi:'#e8d8a8',desc:'Warm tans, muted ochres'},
+  {id:'winter',name:'Winter Bleakness',key:'#8090b0',shadow:'#080c14',hi:'#e8eef8',desc:'Cold whites, steel blue'},
+  {id:'dawn',name:'Dawn / Hope',key:'#e890b0',shadow:'#280a1a',hi:'#f8e8f0',desc:'Pale pinks, lavender'},
+  {id:'midnight',name:'Midnight',key:'#2030a0',shadow:'#020408',hi:'#6080e0',desc:'Deep space, near-black'},
+  {id:'war',name:'War / Combat',key:'#788050',shadow:'#141008',hi:'#c8b880',desc:'Olive, dust, blood spot'},
+  {id:'romantic',name:'Warm Interior',key:'#d07030',shadow:'#1a0808',hi:'#f8c880',desc:'Candlelight, amber'},
+  {id:'clinical',name:'Clinical',key:'#a0c0d8',shadow:'#181c20',hi:'#f0f8ff',desc:'Harsh white, fluorescent'},
+  {id:'underwater',name:'Underwater',key:'#1a6888',shadow:'#020c14',hi:'#60c8e0',desc:'Deep teal, filtered light'},
+  {id:'desert',name:'Desert / Arid',key:'#d8a840',shadow:'#281808',hi:'#f8e8b0',desc:'Ochre, sand, bleached sky'},
+  {id:'fantasy',name:'Fantasy / Epic',key:'#8030c0',shadow:'#0c0414',hi:'#e8a020',desc:'Jewel tones, deep golds'},
+  {id:'flashback',name:'Flashback',key:'#c8a870',shadow:'#1a1408',hi:'#f8f0e0',desc:'Washed out, high-key'},
+  {id:'dream',name:'Dream Sequence',key:'#c040e0',shadow:'#0a0014',hi:'#80f0d0',desc:'Oversaturated, shifted'},
+  {id:'supernatural',name:'Supernatural',key:'#208840',shadow:'#040c06',hi:'#a0ffa0',desc:'Sickly green, wrong light'},
+];
+
+// ── WEATHER OPTIONS ──────────────────────────────────────────────────────────
+const WX_OPTIONS=[
+  {id:'clear',icon:'☀',label:'Clear'},{id:'partly',icon:'⛅',label:'Partly Cloudy'},
+  {id:'overcast',icon:'☁',label:'Overcast'},{id:'fog',icon:'🌫',label:'Fog / Mist'},
+  {id:'rain',icon:'🌧',label:'Rain'},{id:'heavy_rain',icon:'⛈',label:'Heavy Rain'},
+  {id:'storm',icon:'🌩',label:'Storm'},{id:'snow',icon:'❄',label:'Snow'},
+  {id:'blizzard',icon:'🌨',label:'Blizzard'},{id:'hail',icon:'🌦',label:'Hail'},
+  {id:'wind',icon:'💨',label:'High Wind'},{id:'heatwave',icon:'🔥',label:'Heatwave'},
+  {id:'drought',icon:'🏜',label:'Drought'},{id:'ash_fall',icon:'🌋',label:'Ash Fall'},
+  {id:'dead_calm',icon:'⬜',label:'Dead Calm'},{id:'acid_rain',icon:'☠',label:'Acid / Toxic'},
+];
+
+// ── TIME OF DAY ARC ──────────────────────────────────────────────────────────
+const TOD_LABELS={0:'Midnight',180:'3am — Deep Night',360:'6am — Dawn',480:'8am — Morning',720:'Noon',900:'3pm — Afternoon',1080:'6pm — Dusk',1200:'8pm — Evening',1320:'10pm — Night',1439:'Midnight'};
+function minToLabel(m){const h=Math.floor(m/60),mn=m%60;const ampm=h<12?'am':h===12?'pm':'pm';const h12=h===0?12:h>12?h-12:h;const mns=mn.toString().padStart(2,'0');return`${h12}:${mns}${ampm}`;}
+function minToSubLabel(m){if(m<60)return'Midnight — Deep Night';if(m<360)return'Pre-dawn';if(m<480)return'Dawn / Sunrise';if(m<600)return'Morning';if(m<720)return'Late Morning';if(m<780)return'Noon';if(m<900)return'Afternoon';if(m<1020)return'Late Afternoon';if(m<1080)return'Golden Hour';if(m<1140)return'Dusk / Sunset';if(m<1260)return'Evening';if(m<1380)return'Night';return'Late Night';}
+function drawTodArc(minuteVal){
+  const canvas=document.getElementById('tod-canvas');if(!canvas)return;
+  const w=canvas.offsetWidth||600;canvas.width=w;canvas.height=56;
+  const ctx=canvas.getContext('2d');ctx.clearRect(0,0,w,56);
+  // gradient sky bar
+  const grd=ctx.createLinearGradient(0,0,w,0);
+  grd.addColorStop(0,'#0a0a1e');grd.addColorStop(.12,'#1a1440');grd.addColorStop(.22,'#6a3030');
+  grd.addColorStop(.28,'#e8803a');grd.addColorStop(.35,'#f8c050');grd.addColorStop(.45,'#dce8f8');
+  grd.addColorStop(.55,'#b8d8f0');grd.addColorStop(.65,'#f8c050');grd.addColorStop(.72,'#e8803a');
+  grd.addColorStop(.78,'#4a2040');grd.addColorStop(.88,'#1a1440');grd.addColorStop(1,'#0a0a1e');
+  ctx.fillStyle=grd;ctx.fillRect(0,8,w,32);
+  // tick marks
+  ctx.strokeStyle='rgba(255,255,255,.2)';ctx.lineWidth=1;
+  for(let i=0;i<=24;i++){const x=(i/24)*w;ctx.beginPath();ctx.moveTo(x,8);ctx.lineTo(x,i%6===0?0:4);ctx.stroke();}
+  // position indicator
+  const px=(minuteVal/1439)*w;
+  const isDark=minuteVal<360||minuteVal>1080;
+  ctx.fillStyle=isDark?'#e0e8ff':'#ffffff';
+  ctx.beginPath();ctx.arc(px,24,7,0,Math.PI*2);ctx.fill();
+  ctx.strokeStyle='rgba(0,0,0,.4)';ctx.lineWidth=1.5;ctx.stroke();
+  // hour labels
+  ctx.fillStyle='rgba(255,255,255,.5)';ctx.font='9px Courier New';ctx.textAlign='center';
+  [0,6,12,18,24].forEach(h=>{const x=(h/24)*w;if(x>12&&x<w-12)ctx.fillText(h===0||h===24?'12am':h===12?'12pm':h+'',x,50);});
+}
+function setTimeOfDay(val){
+  val=parseInt(val);upCurScene('timeOfDay',val);
+  document.getElementById('tod-label').textContent=minToLabel(val);
+  document.getElementById('tod-sublabel').textContent=minToSubLabel(val);
+  drawTodArc(val);
+}
+
+// ── CALENDAR ─────────────────────────────────────────────────────────────────
+const MONTH_NAMES=['January','February','March','April','May','June','July','August','September','October','November','December'];
+function renderCal(){
+  const sc=getCurScene();
+  document.getElementById('cal-year-input').value=calViewYear;
+  document.getElementById('cal-month-label').textContent=MONTH_NAMES[calViewMonth]+' '+calViewYear;
+  const grid=document.getElementById('cal-grid');grid.innerHTML='';
+  ['Su','Mo','Tu','We','Th','Fr','Sa'].forEach(d=>{const el=document.createElement('div');el.className='cal-dow';el.textContent=d;grid.appendChild(el);});
+  const firstDay=new Date(calViewYear,calViewMonth,1).getDay();
+  const daysInMonth=new Date(calViewYear,calViewMonth+1,0).getDate();
+  const today=new Date();const selD=sc&&sc.realDate;
+  for(let i=0;i<firstDay;i++){const el=document.createElement('div');el.className='cal-day empty';el.textContent='·';grid.appendChild(el);}
+  for(let d=1;d<=daysInMonth;d++){
+    const el=document.createElement('div');el.className='cal-day';el.textContent=d;
+    const isToday=today.getFullYear()===calViewYear&&today.getMonth()===calViewMonth&&today.getDate()===d;
+    const isSel=selD&&selD.y===calViewYear&&selD.m===calViewMonth&&selD.d===d;
+    if(isToday)el.classList.add('today');if(isSel)el.classList.add('on');
+    el.onclick=()=>{upCurScene('realDate',{y:calViewYear,m:calViewMonth,d});updateCalDisplay();renderCal();};
+    grid.appendChild(el);
+  }
+  updateCalDisplay();
+}
+function updateCalDisplay(){
+  const sc=getCurScene();const el=document.getElementById('cal-selected-display');if(!el)return;
+  if(sc&&sc.realDate&&sc.realDate.d){const{y,m,d}=sc.realDate;el.textContent=`Selected: ${MONTH_NAMES[m]} ${d}, ${y}`;}
+  else el.textContent='No date selected.';
+}
+function calNav(dir){calViewMonth+=dir;if(calViewMonth>11){calViewMonth=0;calViewYear++;}if(calViewMonth<0){calViewMonth=11;calViewYear--;}renderCal();}
+function calSetYear(val){const y=parseInt(val);if(!isNaN(y)){calViewYear=y;renderCal();}}
+function clearSceneDate(){upCurScene('realDate',null);renderCal();}
+
+// ── PALETTE ───────────────────────────────────────────────────────────────────
+function triggerPick(id){document.getElementById(id).click();}
+function setPalColor(which,hex){
+  upCurScene('pal_'+which,hex);
+  document.getElementById('sw-'+which).style.background=hex;
+  document.getElementById('hex-'+which).textContent=hex;
+  if(which==='key')renderHarmonies(hex);
+  schedSave();
+}
+function renderHarmonies(keyHex){
+  const g=document.getElementById('harmony-grid');if(!g)return;
+  const schemes=genHarmonies(keyHex);
+  const SCHEME_INFO={complementary:{name:'Complementary',desc:'Opposite on the wheel — maximum contrast. Key vs shadow.'},analogous:{name:'Analogous',desc:'Neighboring hues — harmony and cohesion. Natural, peaceful.'},splitComp:{name:'Split-Comp',desc:'Two neighbors of the complement — softer contrast, more nuance.'},triadic:{name:'Triadic',desc:'Three equidistant hues — vibrant, dynamic, energetic.'},tetradic:{name:'Tetradic',desc:'Four hues — rich and complex. Hard to balance, use sparingly.'},splitWarm:{name:'Warm–Cool Split',desc:'Key color with lightened and darkened variants — tonal grading.'}};
+  g.innerHTML='';
+  Object.entries(schemes).forEach(([key,swatches])=>{
+    const info=SCHEME_INFO[key];
+    const card=document.createElement('div');card.className='harmony-card';
+    card.innerHTML=`<div class="harmony-swatches">${swatches.map(c=>`<div class="h-swatch" style="background:${c}" title="${c}"></div>`).join('')}</div><div class="harmony-name">${info.name}</div><div class="harmony-desc">${info.desc}</div>`;
+    card.onclick=()=>{
+      document.querySelectorAll('.harmony-card').forEach(c=>c.classList.remove('on'));card.classList.add('on');
+      if(swatches[0])setPalColor('key',swatches[0]);
+      if(swatches[swatches.length-1])setPalColor('shadow',swatches[swatches.length-1]);
+      if(swatches[1])setPalColor('highlight',swatches[1]);
+    };
+    g.appendChild(card);
+  });
+}
+function renderMoodPresets(){
+  const g=document.getElementById('mood-grid');if(!g)return;g.innerHTML='';
+  MOODS.forEach(m=>{
+    const btn=document.createElement('div');btn.className='mood-btn';btn.id='mood-'+m.id;
+    btn.innerHTML=`<div class="mood-swatches"><div class="mood-sw" style="background:${m.shadow}"></div><div class="mood-sw" style="background:${m.key}"></div><div class="mood-sw" style="background:${m.hi}"></div></div><div class="mood-name">${m.name}</div><div class="mood-desc">${m.desc}</div>`;
+    btn.onclick=()=>{
+      document.querySelectorAll('.mood-btn').forEach(b=>b.classList.remove('on'));btn.classList.add('on');
+      setPalColor('key',m.key);setPalColor('shadow',m.shadow);setPalColor('highlight',m.hi);
+      document.getElementById('pick-key').value=m.key;
+      document.getElementById('pick-shadow').value=m.shadow;
+      document.getElementById('pick-highlight').value=m.hi;
+    };
+    g.appendChild(btn);
+  });
+}
+function savePalette(){
+  const sc=getCurScene();if(!sc)return;
+  const name=document.getElementById('pal-save-name').value.trim()||'Untitled Palette';
+  sc.savedPalettes=sc.savedPalettes||[];
+  sc.savedPalettes.push({id:Date.now(),name,key:sc.pal_key||'#888',shadow:sc.pal_shadow||'#111',hi:sc.pal_highlight||'#eee'});
+  document.getElementById('pal-save-name').value='';
+  renderSavedPalettes();schedSave();
+}
+function renderSavedPalettes(){
+  const sc=getCurScene();const el=document.getElementById('saved-palettes');if(!el)return;el.innerHTML='';
+  if(!sc||!sc.savedPalettes||!sc.savedPalettes.length)return;
+  sc.savedPalettes.forEach(p=>{
+    const row=document.createElement('div');row.className='saved-pal';
+    row.innerHTML=`<div class="saved-pal-swatches"><div class="saved-pal-sw" style="background:${p.shadow}"></div><div class="saved-pal-sw" style="background:${p.key}"></div><div class="saved-pal-sw" style="background:${p.hi}"></div></div><div class="saved-pal-name">${e(p.name)}</div><button class="saved-pal-del" onclick="event.stopPropagation();delSavedPal(${p.id})">×</button>`;
+    row.onclick=()=>{setPalColor('key',p.key);setPalColor('shadow',p.shadow);setPalColor('highlight',p.hi);document.getElementById('pick-key').value=p.key;document.getElementById('pick-shadow').value=p.shadow;document.getElementById('pick-highlight').value=p.hi;};
+    el.appendChild(row);
+  });
+}
+function delSavedPal(id){const sc=getCurScene();if(!sc)return;sc.savedPalettes=(sc.savedPalettes||[]).filter(p=>p.id!==id);renderSavedPalettes();schedSave();}
+
+// ── WEATHER RENDER ────────────────────────────────────────────────────────────
+function renderWxGrid(){
+  const g=document.getElementById('wx-grid');if(!g)return;g.innerHTML='';
+  const sc=getCurScene();
+  WX_OPTIONS.forEach(wx=>{
+    const btn=document.createElement('button');btn.className='wx-btn'+(sc&&sc.weather===wx.id?' on':'');
+    btn.innerHTML=`<span class="wx-icon">${wx.icon}</span>${wx.label}`;
+    btn.onclick=()=>{upCurScene('weather',wx.id);renderWxGrid();};
+    g.appendChild(btn);
+  });
+}
+
+// ── SEASON RENDER ─────────────────────────────────────────────────────────────
+function renderSeasonBtns(){
+  const sc=getCurScene();
+  ['Spring','Summer','Autumn','Winter','Dry Season','Wet Season','Monsoon','Endless Night','Endless Day','Post-Harvest'].forEach(s=>{
+    const btn=document.getElementById('sea-'+s.replace(/\s/g,'-'));
+    if(btn)btn.className='wx-btn'+(sc&&sc.season===s?' on':'');
+  });
+}
+function setSeason(s){upCurScene('season',s);renderSeasonBtns();}
+
+// ── SCENE CRUD ────────────────────────────────────────────────────────────────
+function getCurScene(){const p=getCur();if(!p)return null;return(p.scenes2||[]).find(s=>s.id===curSceneId)||null;}
+function addScene2(){
+  const p=getCur();if(!p)return;
+  p.scenes2=p.scenes2||[];
+  const ids=p.scenes2.map(s=>s.id);const newId=ids.length?Math.max(...ids)+1:1;
+  p.scenes2.push({id:newId,name:'',phaseRef:'',synopsis:'',chars:'',settingRef:'',vehicles:'',weapons:'',notes:'',timeOfDay:720,weather:'',season:'',storyDate:'',realDate:null,pal_key:'#888888',pal_shadow:'#1a1a1a',pal_highlight:'#e8e8e8',savedPalettes:[]});
+  selectScene(newId);renderSceneList();schedSave();
+}
+function selectScene(id){
+  curSceneId=id;const sc=getCurScene();if(!sc)return;
+  // show editor
+  document.getElementById('scene-editor-empty').style.display='none';
+  const inner=document.getElementById('scene-editor-inner');inner.style.display='flex';
+  // populate setup
+  document.getElementById('sc-name').value=sc.name||'';
+  document.getElementById('sc-phaseref').value=sc.phaseRef||'';
+  document.getElementById('sc-synopsis').value=sc.synopsis||'';
+  document.getElementById('sc-chars').value=sc.chars||'';
+  document.getElementById('sc-settingref').value=sc.settingRef||'';
+  document.getElementById('sc-vehicles').value=sc.vehicles||'';
+  document.getElementById('sc-weapons').value=sc.weapons||'';
+  document.getElementById('sc-notes').value=sc.notes||'';
+  // time
+  const tod=sc.timeOfDay||720;document.getElementById('tod-slider').value=tod;
+  document.getElementById('tod-label').textContent=minToLabel(tod);
+  document.getElementById('tod-sublabel').textContent=minToSubLabel(tod);
+  setTimeout(()=>drawTodArc(tod),30);
+  renderWxGrid();renderSeasonBtns();
+  document.getElementById('sc-storydate').value=sc.storyDate||'';
+  // calendar
+  if(sc.realDate){calViewYear=sc.realDate.y;calViewMonth=sc.realDate.m;}
+  else{calViewYear=new Date().getFullYear();calViewMonth=new Date().getMonth();}
+  renderCal();
+  // palette
+  const k=sc.pal_key||'#888888',sh=sc.pal_shadow||'#1a1a1a',hi=sc.pal_highlight||'#e8e8e8';
+  ['key','shadow','highlight'].forEach(which=>{const c=which==='key'?k:which==='shadow'?sh:hi;document.getElementById('sw-'+which).style.background=c;document.getElementById('hex-'+which).textContent=c;document.getElementById('pick-'+which).value=c;});
+  renderHarmonies(k);renderMoodPresets();renderSavedPalettes();
+  renderSceneList();
+}
+function upCurScene(f,v){const p=getCur();const sc=(p.scenes2||[]).find(s=>s.id===curSceneId);if(sc){sc[f]=v;schedSave();}}
+function delCurScene(){
+  if(!confirm('Delete this scene?'))return;
+  const p=getCur();p.scenes2=(p.scenes2||[]).filter(s=>s.id!==curSceneId);curSceneId=null;
+  document.getElementById('scene-editor-empty').style.display='flex';
+  document.getElementById('scene-editor-inner').style.display='none';
+  renderSceneList();schedSave();
+}
+function renderSceneList(){
+  const p=getCur();const el=document.getElementById('scene-list-items');if(!el)return;el.innerHTML='';
+  (p.scenes2||[]).forEach(sc=>{
+    const item=document.createElement('div');item.className='scene-list-item'+(sc.id===curSceneId?' on':'');
+    const keyCol=sc.pal_key||'#444';
+    item.innerHTML=`<div class="sci-name${sc.name?'':' empty'}">${e(sc.name||'Unnamed Scene')}</div>
+      <div class="sci-meta"><div class="sci-dot" style="background:${keyCol}"></div><span>${sc.phaseRef||'—'}</span>${sc.weather?'<span>'+WX_OPTIONS.find(w=>w.id===sc.weather)?.icon+'</span>':''}</div>`;
+    item.onclick=()=>selectScene(sc.id);
+    el.appendChild(item);
+  });
+}
+function swSc(tab){
+  ['setup','timeweather','calendar','palette'].forEach(t=>{const el=document.getElementById('sc-'+t);if(el)el.className='scpanel'+(t===tab?'':'hide');});
+  document.querySelectorAll('.sctab').forEach((el,i)=>el.classList.toggle('on',['setup','timeweather','calendar','palette'][i]===tab));
+  if(tab==='timeweather'){setTimeout(()=>drawTodArc(parseInt(document.getElementById('tod-slider').value)||720),30);}
+  if(tab==='calendar')renderCal();
+}
+
+// ── STRUCTURE ─────────────────────────────────────────────────────────────────
+function renderStruct(){
+  const p=getCur();const el=document.getElementById('slist');if(!el||!p)return;el.innerHTML='';
+  const sl=FORMAT_STRUCT[p.format]||FORMAT_STRUCT.other;
+  (p.structure||[]).forEach(u=>{
+    const b=document.createElement('div');b.className='sblock';
+    const sc=(u.scenes||[]).map((s,i)=>`<div class="scene-item">
+      <div class="fg"><label class="fl">Location</label><input class="fi" type="text" value="${e(s.loc||'')}" onchange="upScene(${u.id},${i},'loc',this.value)"></div>
+      <div class="fg"><label class="fl">Characters</label><input class="fi" type="text" value="${e(s.chars||'')}" onchange="upScene(${u.id},${i},'chars',this.value)"></div>
+      <button class="sdel" onclick="delScene(${u.id},${i})">×</button>
+      <div class="fg scene-full"><label class="fl">Notes</label><textarea class="fi" onchange="upScene(${u.id},${i},'notes',this.value)">${e(s.notes||'')}</textarea></div>
+    </div>`).join('');
+    b.innerHTML=`<div class="s-hdr" onclick="togUnit(${u.id})">
+      <div class="s-num">${sl.label} ${u.id}</div>
+      <div class="s-tw"><div class="s-title">${e(u.title)}</div><div class="s-desc">${e(u.desc)}</div></div>
+      <div class="s-unit"><input class="sinput" type="text" value="${e(u.pages)}" placeholder="0" onclick="event.stopPropagation()" onchange="upUnit(${u.id},'pages',this.value)"><div style="font-size:10px;color:var(--txt3)">${sl.unit}</div></div>
+    </div>
+    <div class="s-body ${u.open?'open':''}" id="sb-${u.id}">
+      <div style="margin-top:11px;display:grid;grid-template-columns:1fr 1fr;gap:10px">
+        <div class="fg"><label class="fl">Title</label><input class="fi" type="text" value="${e(u.title)}" onchange="upUnit(${u.id},'title',this.value);renderStruct()"></div>
+        <div class="fg"><label class="fl">Description</label><input class="fi" type="text" value="${e(u.desc)}" onchange="upUnit(${u.id},'desc',this.value)"></div>
+      </div>
+      <div style="margin-top:12px"><div class="fl" style="margin-bottom:7px">Scenes / Sequences</div><div class="scene-list">${sc}</div>
+      <button class="bghost" style="margin-top:8px" onclick="addScene(${u.id})">+ Add Scene</button></div>
+    </div>`;
+    el.appendChild(b);
+  });
+  updateBudget();
+}
+function togUnit(id){const p=getCur();const u=(p.structure||[]).find(x=>x.id===id);if(u){u.open=!u.open;renderStruct();}}
+function upUnit(id,f,v){const p=getCur();const u=(p.structure||[]).find(x=>x.id===id);if(u){u[f]=v;schedSave();if(f==='pages')updateBudget();}}
+function addUnit(){
+  const p=getCur();if(!p)return;
+  const ids=(p.structure||[]).map(u=>u.id);const newId=ids.length?Math.max(...ids)+1:1;
+  p.structure=p.structure||[];p.structure.push({id:newId,title:'New Unit',desc:'',pages:'',open:true,scenes:[]});
+  renderStruct();schedSave();
+}
+function addScene(uid){const p=getCur();const u=(p.structure||[]).find(x=>x.id===uid);if(u){u.scenes=u.scenes||[];u.scenes.push({loc:'',chars:'',notes:''});u.open=true;renderStruct();schedSave();}}
+function delScene(uid,i){const p=getCur();const u=(p.structure||[]).find(x=>x.id===uid);if(u){u.scenes.splice(i,1);renderStruct();schedSave();}}
+function upScene(uid,i,f,v){const p=getCur();const u=(p.structure||[]).find(x=>x.id===uid);if(u&&u.scenes[i]){u.scenes[i][f]=v;schedSave();}}
+
+// ── STORYBOARD ────────────────────────────────────────────────────────────────
+const SB_LAYOUTS={full:[[0,0,612,792]],'2h':[[0,0,612,394],[0,398,612,394]],'2v':[[0,0,304,792],[308,0,304,792]],'3t':[[0,0,612,280],[0,284,304,508],[308,284,304,508]],'3b':[[0,0,304,508],[308,0,304,508],[0,512,612,280]],'4':[[0,0,304,394],[308,0,304,394],[0,398,304,394],[308,398,304,394]],'6':[[0,0,200,394],[202,0,200,394],[404,0,208,394],[0,398,200,394],[202,398,200,394],[404,398,208,394]],'splash':[[0,0,612,528],[0,532,304,260],[308,532,304,260]]};
+function gC(){return document.getElementById('sb-canvas');}
+function gX(){return gC().getContext('2d');}
+function drawGrid(overlay){
+  const c=gC();const ctx=gX();
+  if(!overlay){ctx.fillStyle='#ffffff';ctx.fillRect(0,0,c.width,c.height);}
+  const key=document.getElementById('sb-layout').value;
+  const panels=SB_LAYOUTS[key]||SB_LAYOUTS['2h'];
+  ctx.strokeStyle='#cccccc';ctx.lineWidth=2;
+  panels.forEach(([x,y,w,h])=>ctx.strokeRect(x,y,w,h));
+  if(!overlay)renderPanelAnnotations();
+}
+function saveSbPg(){
+  if(!sbPages[sbCurPg])return;
+  sbPages[sbCurPg].data=gC().toDataURL('image/jpeg',.7);
+  sbPages[sbCurPg].layout=document.getElementById('sb-layout').value;
+  // Save panel annotations from DOM
+  const layout=sbPages[sbCurPg].layout;
+  const panelCount=(SB_LAYOUTS[layout]||SB_LAYOUTS['2h']).length;
+  sbPages[sbCurPg].panels=sbPages[sbCurPg].panels||[];
+  for(let i=0;i<panelCount;i++){
+    const ca=document.getElementById('pan-cap-'+i);const di=document.getElementById('pan-dia-'+i);const cm=document.getElementById('pan-cam-'+i);
+    if(!sbPages[sbCurPg].panels[i])sbPages[sbCurPg].panels[i]={caption:'',dialogue:'',camera:''};
+    if(ca)sbPages[sbCurPg].panels[i].caption=ca.value;
+    if(di)sbPages[sbCurPg].panels[i].dialogue=di.value;
+    if(cm)sbPages[sbCurPg].panels[i].camera=cm.value;
+  }
+  const p=getCur();if(p){p.storyboard=sbPages;schedSave();}
+}
+function restoreSbPage(){
+  const pg=sbPages[sbCurPg];const c=gC();if(!c)return;
+  const ctx=c.getContext('2d');ctx.clearRect(0,0,c.width,c.height);ctx.fillStyle='#ffffff';ctx.fillRect(0,0,c.width,c.height);
+  const layout=(pg&&pg.layout)||'2h';
+  const lsel=document.getElementById('sb-layout');if(lsel)lsel.value=layout;
+  if(pg&&pg.data){const img=new Image();img.onload=()=>{ctx.drawImage(img,0,0);drawGrid(true);};img.src=pg.data;}
+  else drawGrid();
+  sbUndo=[];
+  renderPanelAnnotations();
+}
+function renderPanelAnnotations(){
+  const pg=sbPages[sbCurPg];const el=document.getElementById('sb-annotations');if(!el)return;
+  const layout=(pg&&pg.layout)||'2h';
+  const panels=SB_LAYOUTS[layout]||SB_LAYOUTS['2h'];
+  const stored=pg&&pg.panels?pg.panels:[];
+  el.innerHTML='';
+  const PANEL_LABELS={full:['Full Page'],
+    '2h':['Panel 1 — Top','Panel 2 — Bottom'],
+    '2v':['Panel 1 — Left','Panel 2 — Right'],
+    '3t':['Panel 1 — Top Wide','Panel 2 — Bottom Left','Panel 3 — Bottom Right'],
+    '3b':['Panel 1 — Top Left','Panel 2 — Top Right','Panel 3 — Bottom Wide'],
+    '4':['Panel 1 — Top Left','Panel 2 — Top Right','Panel 3 — Bottom Left','Panel 4 — Bottom Right'],
+    '6':['P1','P2','P3','P4','P5','P6'],
+    splash:['Splash — Full','Insert 1','Insert 2']};
+  const labels=PANEL_LABELS[layout]||panels.map((_,i)=>'Panel '+(i+1));
+  panels.forEach((_,i)=>{
+    const pd=stored[i]||{caption:'',dialogue:'',camera:''};
+    const row=document.createElement('div');row.className='sb-panel-row';
+    row.innerHTML=`<div class="sb-panel-hdr">
+        <div class="sb-panel-num">${labels[i]||'Panel '+(i+1)}</div>
+        <input class="sb-panel-cam" id="pan-cam-${i}" value="${e(pd.camera||'')}" placeholder="Camera direction — close-up, wide shot, bird's eye, POV…" onchange="sbPanelSave()">
+      </div>
+      <div class="sb-panel-body">
+        <div class="sb-panel-cell">
+          <div class="sb-panel-lbl">Caption / Action</div>
+          <textarea class="sb-panel-ta caption" id="pan-cap-${i}" placeholder="What is happening in this panel. Environment, movement, action…" onchange="sbPanelSave()">${e(pd.caption||'')}</textarea>
+        </div>
+        <div class="sb-panel-cell">
+          <div class="sb-panel-lbl">Dialogue / Narration</div>
+          <textarea class="sb-panel-ta" id="pan-dia-${i}" placeholder="Speech bubbles, captions, thought boxes, narration boxes…" onchange="sbPanelSave()">${e(pd.dialogue||'')}</textarea>
+        </div>
+      </div>`;
+    el.appendChild(row);
+  });
+}
+function sbPanelSave(){clearTimeout(saveT);saveT=setTimeout(()=>{saveSbPg();},600);}
+function initSb(){
+  const c=gC();if(!c||c._init)return;c._init=true;
+  const pos=ev=>{const r=c.getBoundingClientRect();const sc=c.width/r.width;return[(ev.clientX-r.left)*sc,(ev.clientY-r.top)*sc];};
+  c.addEventListener('mousedown',ev=>{const[x,y]=pos(ev);dDown(x,y);});
+  c.addEventListener('mousemove',ev=>{const[x,y]=pos(ev);dMove(x,y);});
+  c.addEventListener('mouseup',dUp);c.addEventListener('mouseleave',dUp);
+  c.addEventListener('touchstart',ev=>{ev.preventDefault();const t=ev.touches[0];const r=c.getBoundingClientRect();const sc=c.width/r.width;dDown((t.clientX-r.left)*sc,(t.clientY-r.top)*sc);},{passive:false});
+  c.addEventListener('touchmove',ev=>{ev.preventDefault();const t=ev.touches[0];const r=c.getBoundingClientRect();const sc=c.width/r.width;dMove((t.clientX-r.left)*sc,(t.clientY-r.top)*sc);},{passive:false});
+  c.addEventListener('touchend',dUp);
+}
+function dDown(x,y){sbIsDown=true;sbLx=x;sbLy=y;if(sbTool==='line')sbLineStart=[x,y];else{pushUndo();gX().beginPath();gX().moveTo(x,y);}}
+function dMove(x,y){
+  if(!sbIsDown)return;const ctx=gX();const sz=parseInt(document.getElementById('sb-size').value)||2;const col=document.getElementById('sb-color').value;
+  if(sbTool==='eraser'){ctx.globalCompositeOperation='destination-out';ctx.lineWidth=sz*4;ctx.lineCap='round';ctx.beginPath();ctx.moveTo(sbLx,sbLy);ctx.lineTo(x,y);ctx.stroke();ctx.globalCompositeOperation='source-over';}
+  else if(sbTool==='pencil'||sbTool==='brush'){ctx.globalCompositeOperation='source-over';ctx.lineWidth=sbTool==='brush'?sz*2:sz;ctx.lineCap='round';ctx.lineJoin='round';ctx.strokeStyle=col;ctx.beginPath();ctx.moveTo(sbLx,sbLy);ctx.lineTo(x,y);ctx.stroke();}
+  sbLx=x;sbLy=y;
+}
+function dUp(){
+  if(!sbIsDown)return;
+  if(sbTool==='line'&&sbLineStart){pushUndo();const ctx=gX();const sz=parseInt(document.getElementById('sb-size').value)||2;ctx.lineWidth=sz;ctx.lineCap='round';ctx.strokeStyle=document.getElementById('sb-color').value;ctx.beginPath();ctx.moveTo(sbLineStart[0],sbLineStart[1]);ctx.lineTo(sbLx,sbLy);ctx.stroke();sbLineStart=null;}
+  sbIsDown=false;clearTimeout(saveT);saveT=setTimeout(()=>{saveSbPg();},1200);
+}
+function pushUndo(){sbUndo.push(gC().toDataURL('image/jpeg',.6));if(sbUndo.length>15)sbUndo.shift();}
+function undoSb(){if(!sbUndo.length)return;const c=gC();const ctx=c.getContext('2d');const img=new Image();img.onload=()=>{ctx.clearRect(0,0,c.width,c.height);ctx.drawImage(img,0,0);drawGrid(true);};img.src=sbUndo.pop();}
+function setTool(t){sbTool=t;document.querySelectorAll('.sbbtn').forEach(b=>{if(b.id&&b.id.startsWith('t-'))b.classList.remove('on');});const btn=document.getElementById('t-'+t);if(btn)btn.classList.add('on');}
+function clearPg(){if(confirm('Clear this storyboard page?')){const ctx=gX();ctx.clearRect(0,0,gC().width,gC().height);drawGrid();sbUndo=[];saveSbPg();renderSbThumbs();}}
+function exportPg(){const a=document.createElement('a');a.download='sb_p'+(sbCurPg+1)+'.png';a.href=gC().toDataURL();a.click();}
+function renderSbThumbs(){
+  const el=document.getElementById('sbpgs');if(!el)return;el.innerHTML='';
+  sbPages.forEach((pg,i)=>{
+    const d=document.createElement('div');d.className='sbthumb'+(i===sbCurPg?' on':'');
+    if(pg.data){const img=document.createElement('img');img.src=pg.data;d.appendChild(img);}else d.textContent='p'+(i+1);
+    d.onclick=()=>{saveSbPg();sbCurPg=i;restoreSbPage();renderSbThumbs();};
+    el.appendChild(d);
+  });
+  const add=document.createElement('div');add.className='sbadd';add.textContent='+';
+  add.onclick=()=>{saveSbPg();sbPages.push({layout:'2h',data:null});sbCurPg=sbPages.length-1;restoreSbPage();renderSbThumbs();schedSave();};
+  el.appendChild(add);
+}
+
+// ── BIBLE CHECK ENGINE ────────────────────────────────────────────────────────
+
+function fuzzyMatch(a,b){
+  a=(a||'').toLowerCase().trim();b=(b||'').toLowerCase().trim();
+  if(!a||!b)return false;
+  return a.includes(b)||b.includes(a)||a.split(' ').some(w=>w.length>3&&b.includes(w))||b.split(' ').some(w=>w.length>3&&a.includes(w));
+}
+
+function scoreCharacter(ch){
+  const fields=['name','role','arc','physical','rels','notes'];
+  const filled=fields.filter(f=>ch[f]&&ch[f].trim()&&ch[f]!=='(Unnamed)').length;
+  if(ch.image)return Math.round(((filled+1)/(fields.length+1))*100);
+  return Math.round((filled/fields.length)*100);
+}
+
+function scoreScene(sc){
+  const fields=['name','synopsis','chars','settingRef'];
+  const filled=fields.filter(f=>sc[f]&&(sc[f]+'').trim()).length;
+  const hasTime=sc.timeOfDay!==undefined&&sc.timeOfDay!==720?1:0;
+  const hasWeather=sc.weather?1:0;
+  const hasPal=sc.pal_key&&sc.pal_key!=='#888888'?1:0;
+  return Math.round(((filled+hasTime+hasWeather+hasPal)/(fields.length+3))*100);
+}
+
+function runBibleCheck(){
+  const p=getCur();if(!p){return;}
+  const issues=[];
+
+  const chars=p.characters||[];
+  const settings=p.settings||[];
+  const vehicles=p.vehicles||[];
+  const weapons=p.weapons||[];
+  const structure=p.structure||[];
+  const scenes=p.scenes2||[];
+  const notes=p.notes||{};
+
+  const charNames=chars.map(c=>c.name||'');
+  const settingNames=settings.map(s=>s.name||'');
+  const vehicleNames=vehicles.map(v=>v.name||'');
+  const weaponNames=weapons.map(w=>w.name||'');
+
+  // ── CHARACTER CHECKS ──────────────────────────────────────────────────────
+  chars.forEach(ch=>{
+    const n=ch.name||'';
+    if(!n||n==='(Unnamed)')
+      issues.push({sev:'error',cat:'Characters',msg:`Character #${ch.id} has no name`,nav:()=>{sw('characters');expChar=ch.id;renderCharGrid();}});
+    else{
+      if(!ch.role) issues.push({sev:'warning',cat:'Characters',msg:`${n}: no role defined`,nav:()=>{sw('characters');expChar=ch.id;renderCharGrid();}});
+      if(!ch.arc)  issues.push({sev:'warning',cat:'Characters',msg:`${n}: no character arc defined`,nav:()=>{sw('characters');expChar=ch.id;renderCharGrid();}});
+      if(!ch.physical) issues.push({sev:'info',cat:'Characters',msg:`${n}: no physical description`,nav:()=>{sw('characters');expChar=ch.id;renderCharGrid();}});
+      if(!ch.rels) issues.push({sev:'info',cat:'Characters',msg:`${n}: no relationships documented`,nav:()=>{sw('characters');expChar=ch.id;renderCharGrid();}});
+      if(!ch.image) issues.push({sev:'info',cat:'Characters',msg:`${n}: no reference image uploaded`,nav:()=>{sw('characters');expChar=ch.id;renderCharGrid();}});
+      // Check relationship refs against character list
+      if(ch.rels){
+        charNames.forEach(cn=>{if(cn&&cn!==n&&ch.rels.toLowerCase().includes(cn.split(' ')[0].toLowerCase())){/* found — ok */}});
+      }
+    }
+  });
+  if(!chars.length) issues.push({sev:'warning',cat:'Characters',msg:'No characters defined in this project',nav:()=>sw('characters')});
+
+  // ── SETTING CHECKS ────────────────────────────────────────────────────────
+  settings.forEach(s=>{
+    if(!s.name) issues.push({sev:'error',cat:'Settings',msg:`Setting #${s.id} has no name`,nav:()=>{sw('settings');expSetting=s.id;renderSettingGrid();}});
+    else{
+      if(!s.description) issues.push({sev:'warning',cat:'Settings',msg:`${s.name}: no description`,nav:()=>{sw('settings');expSetting=s.id;renderSettingGrid();}});
+      if(!s.timeOfDay)   issues.push({sev:'info',cat:'Settings',msg:`${s.name}: time of day not specified`,nav:()=>{sw('settings');expSetting=s.id;renderSettingGrid();}});
+      if(!s.significance) issues.push({sev:'info',cat:'Settings',msg:`${s.name}: story significance not noted`,nav:()=>{sw('settings');expSetting=s.id;renderSettingGrid();}});
+    }
+  });
+
+  // ── SCENE CHECKS ─────────────────────────────────────────────────────────
+  scenes.forEach(sc=>{
+    const n=sc.name||`Scene #${sc.id}`;
+    if(!sc.name) issues.push({sev:'warning',cat:'Scenes',msg:`Scene #${sc.id} has no name`,nav:()=>{sw('scenes');selectScene(sc.id);}});
+    if(!sc.synopsis) issues.push({sev:'warning',cat:'Scenes',msg:`${n}: no synopsis`,nav:()=>{sw('scenes');selectScene(sc.id);}});
+    if(!sc.chars) issues.push({sev:'warning',cat:'Scenes',msg:`${n}: no characters listed`,nav:()=>{sw('scenes');selectScene(sc.id);}});
+    if(!sc.settingRef) issues.push({sev:'info',cat:'Scenes',msg:`${n}: no setting reference`,nav:()=>{sw('scenes');selectScene(sc.id);}});
+    if(!sc.weather) issues.push({sev:'info',cat:'Scenes',msg:`${n}: no weather conditions set`,nav:()=>{sw('scenes');selectScene(sc.id);swSc('timeweather');}});
+    // Reference checks
+    if(sc.chars){
+      sc.chars.split(/[,;&\/\n]+/).map(s=>s.trim()).filter(Boolean).forEach(mention=>{
+        if(mention.length<2)return;
+        if(!charNames.some(cn=>fuzzyMatch(cn,mention)))
+          issues.push({sev:'warning',cat:'References',msg:`Scene "${n}": character "${mention}" not found in character bible`,nav:()=>{sw('scenes');selectScene(sc.id);}});
+      });
+    }
+    if(sc.settingRef&&settingNames.length){
+      if(!settingNames.some(sn=>fuzzyMatch(sn,sc.settingRef)))
+        issues.push({sev:'warning',cat:'References',msg:`Scene "${n}": setting "${sc.settingRef}" not found in Settings tab`,nav:()=>{sw('scenes');selectScene(sc.id);}});
+    }
+    if(sc.vehicles&&vehicleNames.length){
+      sc.vehicles.split(/[,;&\/\n]+/).map(s=>s.trim()).filter(Boolean).forEach(mention=>{
+        if(!vehicleNames.some(vn=>fuzzyMatch(vn,mention)))
+          issues.push({sev:'info',cat:'References',msg:`Scene "${n}": vehicle "${mention}" not found in Vehicles tab`,nav:()=>{sw('scenes');selectScene(sc.id);}});
+      });
+    }
+    if(sc.weapons&&weaponNames.length){
+      sc.weapons.split(/[,;&\/\n]+/).map(s=>s.trim()).filter(Boolean).forEach(mention=>{
+        if(!weaponNames.some(wn=>fuzzyMatch(wn,mention)))
+          issues.push({sev:'info',cat:'References',msg:`Scene "${n}": weapon/prop "${mention}" not found in Accessories tab`,nav:()=>{sw('scenes');selectScene(sc.id);}});
+      });
+    }
+    if(!sc.pal_key||sc.pal_key==='#888888')
+      issues.push({sev:'info',cat:'Scenes',msg:`${n}: no color palette / grade set`,nav:()=>{sw('scenes');selectScene(sc.id);swSc('palette');}});
+  });
+
+  // ── STRUCTURE CHECKS ──────────────────────────────────────────────────────
+  const totalPgs=structure.reduce((s,u)=>s+(parseFloat(u.pages)||0),0);
+  const tgtPgs=parseFloat((p.targetLength||'120').replace(/[^0-9]/g,''))||120;
+  if(totalPgs>tgtPgs*1.15&&totalPgs>0)
+    issues.push({sev:'warning',cat:'Structure',msg:`Page total (${totalPgs}) exceeds target (${tgtPgs}) by ${Math.round((totalPgs/tgtPgs-1)*100)}%`,nav:()=>sw('structure')});
+  if(totalPgs<tgtPgs*0.5&&totalPgs>0)
+    issues.push({sev:'info',cat:'Structure',msg:`Page total (${totalPgs}) is less than half of target (${tgtPgs}) — structure may still be in early stages`,nav:()=>sw('structure')});
+  if(totalPgs===0)
+    issues.push({sev:'warning',cat:'Structure',msg:'No page estimates set on any structure unit',nav:()=>sw('structure')});
+  structure.forEach(u=>{
+    if(!u.title||u.title==='New Unit') issues.push({sev:'warning',cat:'Structure',msg:`Structure unit #${u.id} has no title`,nav:()=>sw('structure')});
+    if(!u.pages) issues.push({sev:'info',cat:'Structure',msg:`${u.title||'Unit #'+u.id}: no page/unit estimate`,nav:()=>sw('structure')});
+    if(!u.scenes||!u.scenes.length) issues.push({sev:'info',cat:'Structure',msg:`${u.title||'Unit #'+u.id}: no sequences or scenes attached`,nav:()=>sw('structure')});
+    else{
+      u.scenes.forEach((s,i)=>{
+        if(!s.notes) issues.push({sev:'info',cat:'Structure',msg:`${u.title} / sequence ${i+1}: no notes`,nav:()=>sw('structure')});
+        if(s.chars){
+          s.chars.split(/[,;&\/\n]+/).map(x=>x.trim()).filter(Boolean).forEach(mention=>{
+            if(mention.length<2)return;
+            if(!charNames.some(cn=>fuzzyMatch(cn,mention)))
+              issues.push({sev:'info',cat:'References',msg:`Structure "${u.title}" / seq ${i+1}: character "${mention}" not in bible`,nav:()=>sw('structure')});
+          });
+        }
+      });
+    }
+  });
+
+  // ── CALENDAR CONTINUITY CHECK ─────────────────────────────────────────────
+  const datedScenes=scenes.filter(sc=>sc.realDate&&sc.realDate.d).map(sc=>({name:sc.name||'Scene #'+sc.id,date:new Date(sc.realDate.y,sc.realDate.m,sc.realDate.d).getTime(),sc}));
+  datedScenes.sort((a,b)=>a.date-b.date);
+  for(let i=1;i<datedScenes.length;i++){
+    if(datedScenes[i].date===datedScenes[i-1].date)
+      issues.push({sev:'info',cat:'Timeline',msg:`"${datedScenes[i-1].name}" and "${datedScenes[i].name}" share the same calendar date`,nav:()=>{sw('scenes');selectScene(datedScenes[i].sc.id);}});
+  }
+
+  // ── LOCKED DECISIONS SCAN ─────────────────────────────────────────────────
+  const decisions=(notes.decisions||'').toLowerCase();
+  if(decisions){
+    const negations=[];
+    decisions.split(/[.\n]+/).forEach(line=>{
+      const l=line.trim();
+      if(/^no |never |not |without /i.test(l)||l.includes(' never ')||l.includes(' not ')||l.includes(' no '))
+        negations.push(l);
+    });
+    const allStoryText=[
+      ...scenes.map(sc=>(sc.synopsis||'')+' '+(sc.notes||'')),
+      ...structure.flatMap(u=>(u.scenes||[]).map(s=>s.notes||'')),
+      ...chars.map(c=>(c.notes||'')+' '+(c.arc||''))
+    ].join(' ').toLowerCase();
+    negations.forEach(rule=>{
+      const keywords=rule.replace(/^(no|never|not|without)\s+/i,'').replace(/[^a-z\s]/g,'').trim().split(/\s+/).filter(w=>w.length>4);
+      keywords.forEach(kw=>{
+        if(allStoryText.includes(kw)){
+          issues.push({sev:'warning',cat:'Locked Decisions',msg:`Locked rule "${rule.substring(0,60)}…" — keyword "${kw}" appears in story text. Verify no contradiction.`,nav:()=>sw('notes')});
+        }
+      });
+    });
+    if(!negations.length&&decisions.length>20)
+      issues.push({sev:'info',cat:'Locked Decisions',msg:'Decisions are logged but contain no negation rules to scan against. Consider phrasing them as "No X" or "Never Y" for automatic scanning.',nav:()=>sw('notes')});
+  } else {
+    issues.push({sev:'info',cat:'Locked Decisions',msg:'No locked decisions documented. Add them to Notes → Key Decisions Locked for automatic consistency scanning.',nav:()=>sw('notes')});
+  }
+
+  // ── ASSET COMPLETENESS ────────────────────────────────────────────────────
+  vehicles.forEach(v=>{if(!v.name) issues.push({sev:'warning',cat:'Assets',msg:`Vehicle #${v.id} has no name`,nav:()=>{sw('vehicles');setExpId('vehicle',v.id);renderVehicleGrid();}});});
+  weapons.forEach(w=>{if(!w.name)  issues.push({sev:'warning',cat:'Assets',msg:`Weapon/Tool #${w.id} has no name`,nav:()=>{sw('weapons');setExpId('weapon',w.id);renderWeaponGrid();}});});
+
+  // ── RENDER RESULTS ────────────────────────────────────────────────────────
+  const errCount=issues.filter(i=>i.sev==='error').length;
+  const warnCount=issues.filter(i=>i.sev==='warning').length;
+  const infoCount=issues.filter(i=>i.sev==='info').length;
+
+  // Completeness score
+  const charScores=chars.map(ch=>scoreCharacter(ch));
+  const sceneScores=scenes.map(sc=>scoreScene(sc));
+  const structScore=structure.length?(structure.filter(u=>u.title&&u.pages&&u.scenes&&u.scenes.length).length/structure.length)*100:0;
+  const allScores=[...charScores,...sceneScores,structScore].filter(s=>s!==undefined);
+  const overallScore=allScores.length?Math.round(allScores.reduce((a,b)=>a+b,0)/allScores.length):0;
+
+  document.getElementById('bc-score').textContent=overallScore+'%';
+  const fill=document.getElementById('bc-score-fill');
+  fill.style.width=overallScore+'%';
+  fill.style.background=overallScore>=80?'var(--grntxt)':overallScore>=50?'#c89030':'#e05050';
+  document.getElementById('bc-n-err').textContent=errCount;
+  document.getElementById('bc-n-warn').textContent=warnCount;
+  document.getElementById('bc-n-info').textContent=infoCount;
+
+  // Character completeness bars
+  const cc=document.getElementById('bc-char-completeness');
+  cc.innerHTML=chars.length?chars.map(ch=>{
+    const s=scoreCharacter(ch);const col=s>=80?'var(--grntxt)':s>=50?'#c89030':'#e05050';
+    return`<div class="bc-comp-row"><div class="bc-comp-label" title="${e(ch.name||'Unnamed')}">${e((ch.name||'Unnamed').substring(0,12))}</div><div class="bc-comp-track"><div class="bc-comp-fill" style="width:${s}%;background:${col}"></div></div><div class="bc-comp-pct">${s}%</div></div>`;
+  }).join(''):'<div style="font-size:10px;color:var(--txt3)">No characters yet.</div>';
+
+  // Scene completeness bars
+  const sc2=document.getElementById('bc-scene-completeness');
+  sc2.innerHTML=scenes.length?scenes.map(sc=>{
+    const s=scoreScene(sc);const col=s>=80?'var(--grntxt)':s>=50?'#c89030':'#e05050';
+    return`<div class="bc-comp-row"><div class="bc-comp-label" title="${e(sc.name||'Unnamed')}">${e((sc.name||'Unnamed').substring(0,12))}</div><div class="bc-comp-track"><div class="bc-comp-fill" style="width:${s}%;background:${col}"></div></div><div class="bc-comp-pct">${s}%</div></div>`;
+  }).join(''):'<div style="font-size:10px;color:var(--txt3)">No scenes yet.</div>';
+
+  // Issue list grouped by category
+  const list=document.getElementById('bc-issue-list');
+  const title=document.getElementById('bc-results-title');
+  title.textContent=`${issues.length} issue${issues.length!==1?'s':''} found — ${errCount} error${errCount!==1?'s':''}, ${warnCount} warning${warnCount!==1?'s':''}`;
+
+  if(!issues.length){
+    list.innerHTML='<div class="bc-all-clear"><div class="bc-all-clear-icon">✓</div><div>Bible is clean — no issues found</div></div>';
+    return;
+  }
+
+  const cats=[...new Set(issues.map(i=>i.cat))];
+  const SEV_ORDER={error:0,warning:1,info:2};
+  const SEV_ICON={error:'●',warning:'△',info:'○'};
+
+  list.innerHTML=cats.map(cat=>{
+    const catIssues=issues.filter(i=>i.cat===cat).sort((a,b)=>SEV_ORDER[a.sev]-SEV_ORDER[b.sev]);
+    const worst=catIssues.find(i=>i.sev==='error')?'err':catIssues.find(i=>i.sev==='warning')?'warn':'info';
+    const badgeText=`${catIssues.length} issue${catIssues.length!==1?'s':''}`;
+    const issueRows=catIssues.map((iss,idx)=>`<div class="bc-issue">
+      <span class="bc-issue-icon" style="color:${iss.sev==='error'?'#e05050':iss.sev==='warning'?'#c89030':'var(--blutxt)'}">${SEV_ICON[iss.sev]}</span>
+      <span class="bc-issue-msg">${e(iss.msg)}</span>
+      <button class="bc-issue-fix" onclick="bcNav(${cats.indexOf(cat)},${idx})">→ Fix</button>
+    </div>`).join('');
+    return`<div class="bc-cat-section" id="bccat-${cat.replace(/\s/g,'-')}">
+      <div class="bc-cat-hdr" onclick="toggleBcCat(this)">
+        <span class="bc-cat-name">${cat}</span>
+        <span class="bc-cat-badge ${worst}">${badgeText}</span>
+        <span style="color:var(--txt3);margin-left:8px;font-size:12px">▾</span>
+      </div>
+      <div class="bc-issues-list open">${issueRows}</div>
+    </div>`;
+  }).join('');
+
+  // Store nav functions
+  window._bcNavFns=[];
+  cats.forEach(cat=>{
+    const catIssues=issues.filter(i=>i.cat===cat).sort((a,b)=>SEV_ORDER[a.sev]-SEV_ORDER[b.sev]);
+    window._bcNavFns.push(catIssues.map(i=>i.nav));
+  });
+}
+
+function toggleBcCat(hdr){
+  const list=hdr.nextElementSibling;list.classList.toggle('open');
+  const arrow=hdr.querySelector('span:last-child');if(arrow)arrow.textContent=list.classList.contains('open')?'▾':'▸';
+}
+function bcNav(catIdx,issIdx){
+  if(window._bcNavFns&&window._bcNavFns[catIdx]&&window._bcNavFns[catIdx][issIdx])
+    window._bcNavFns[catIdx][issIdx]();
+}
+
+
+// ── SCRIPT ENGINE ─────────────────────────────────────────────────────────────
+
+// Block type definitions per format
+const BLOCK_DEFS={
+  screenplay:{
+    types:['scene_heading','action','character','parenthetical','dialogue','transition','shot'],
+    labels:{scene_heading:'SCN',action:'ACT',character:'CHR',parenthetical:'PAR',dialogue:'DLG',transition:'TRN',shot:'SHT'},
+    names:{scene_heading:'Scene Heading',action:'Action',character:'Character',parenthetical:'Parenthetical',dialogue:'Dialogue',transition:'Transition',shot:'Shot'},
+    nextType:{scene_heading:'action',action:'character',character:'dialogue',parenthetical:'dialogue',dialogue:'action',transition:'scene_heading',shot:'action'},
+    tabCycle:['action','character','scene_heading','transition','shot','parenthetical','dialogue'],
+    placeholders:{scene_heading:'INT./EXT. LOCATION — DAY/NIGHT',action:'Action / description',character:'CHARACTER NAME',parenthetical:'(parenthetical)',dialogue:'Dialogue',transition:'CUT TO:',shot:'ANGLE ON'},
+    defaultFirst:'transition',defaultFirstText:'FADE IN:'
+  },
+  tv:{
+    types:['scene_heading','action','character','parenthetical','dialogue','transition','shot','act_break','cold_open'],
+    labels:{scene_heading:'SCN',action:'ACT',character:'CHR',parenthetical:'PAR',dialogue:'DLG',transition:'TRN',shot:'SHT',act_break:'ACT',cold_open:'CLO'},
+    names:{scene_heading:'Scene Heading',action:'Action',character:'Character',parenthetical:'Parenthetical',dialogue:'Dialogue',transition:'Transition',shot:'Shot',act_break:'Act Break',cold_open:'Cold Open'},
+    nextType:{scene_heading:'action',action:'character',character:'dialogue',parenthetical:'dialogue',dialogue:'action',transition:'scene_heading',shot:'action',act_break:'scene_heading',cold_open:'scene_heading'},
+    tabCycle:['action','character','scene_heading','transition','act_break','cold_open','shot'],
+    placeholders:{scene_heading:'INT./EXT. LOCATION — DAY/NIGHT',action:'Action',character:'CHARACTER NAME',parenthetical:'(parenthetical)',dialogue:'Dialogue',transition:'CUT TO:',shot:'ANGLE ON',act_break:'ACT ONE',cold_open:'COLD OPEN'},
+    defaultFirst:'cold_open',defaultFirstText:'COLD OPEN'
+  },
+  stage:{
+    types:['act_heading','scene_heading','stage_direction','character','dialogue'],
+    labels:{act_heading:'ACT',scene_heading:'SCN',stage_direction:'STG',character:'CHR',dialogue:'DLG'},
+    names:{act_heading:'Act',scene_heading:'Scene',stage_direction:'Stage Direction',character:'Character',dialogue:'Dialogue'},
+    nextType:{act_heading:'scene_heading',scene_heading:'stage_direction',stage_direction:'character',character:'dialogue',dialogue:'stage_direction'},
+    tabCycle:['stage_direction','character','scene_heading','act_heading','dialogue'],
+    placeholders:{act_heading:'ACT ONE',scene_heading:'Scene 1',stage_direction:'Stage direction…',character:'CHARACTER',dialogue:'Dialogue'},
+    defaultFirst:'act_heading',defaultFirstText:'ACT ONE'
+  },
+  comic:{
+    types:['page_heading','panel_heading','panel_action','character','dialogue','caption','sfx'],
+    labels:{page_heading:'PGE',panel_heading:'PNL',panel_action:'ACT',character:'CHR',dialogue:'DLG',caption:'CAP',sfx:'SFX'},
+    names:{page_heading:'Page',panel_heading:'Panel',panel_action:'Panel Action',character:'Character',dialogue:'Dialogue',caption:'Caption',sfx:'SFX'},
+    nextType:{page_heading:'panel_heading',panel_heading:'panel_action',panel_action:'character',character:'dialogue',dialogue:'panel_action',caption:'character',sfx:'panel_action'},
+    tabCycle:['panel_action','character','panel_heading','page_heading','caption','sfx','dialogue'],
+    placeholders:{page_heading:'PAGE 1',panel_heading:'PANEL 1',panel_action:'Panel description — what the artist draws',character:'CHARACTER',dialogue:'Dialogue',caption:'Caption / narration',sfx:'SFX: BOOM!'},
+    defaultFirst:'page_heading',defaultFirstText:'PAGE 1'
+  },
+  treatment:{
+    types:['scene_heading','action'],
+    labels:{scene_heading:'SCN',action:'PRO'},
+    names:{scene_heading:'Scene Heading',action:'Prose'},
+    nextType:{scene_heading:'action',action:'scene_heading'},
+    tabCycle:['action','scene_heading'],
+    placeholders:{scene_heading:'SCENE HEADING',action:'Prose description in present tense…'},
+    defaultFirst:'scene_heading',defaultFirstText:'OPENING'
+  },
+  novel:{
+    types:['chapter_heading','scene_break','prose','block_quote','author_note'],
+    labels:{chapter_heading:'CH',scene_break:'BRK',prose:'PRO',block_quote:'BQ',author_note:'NOTE'},
+    names:{chapter_heading:'Chapter Heading',scene_break:'Scene Break',prose:'Prose',block_quote:'Block Quote',author_note:'Author Note'},
+    nextType:{chapter_heading:'prose',scene_break:'prose',prose:'prose',block_quote:'prose',author_note:'prose'},
+    tabCycle:['prose','chapter_heading','scene_break','block_quote','author_note'],
+    placeholders:{chapter_heading:'Chapter One',scene_break:'* * *',prose:'Begin writing…',block_quote:'Quoted passage or epigraph…',author_note:'[Author note — not for publication]'},
+    defaultFirst:'chapter_heading',defaultFirstText:'Chapter One'
+  },
+  poetry:{
+    types:['poem_title','stanza_break','verse_line','couplet','epigraph','section_heading','dedication'],
+    labels:{poem_title:'TTL',stanza_break:'BRK',verse_line:'VRS',couplet:'CPL',epigraph:'EPG',section_heading:'SCN',dedication:'DED'},
+    names:{poem_title:'Poem Title',stanza_break:'Stanza Break',verse_line:'Verse Line',couplet:'Couplet',epigraph:'Epigraph',section_heading:'Section',dedication:'Dedication'},
+    nextType:{poem_title:'verse_line',stanza_break:'verse_line',verse_line:'verse_line',couplet:'stanza_break',epigraph:'verse_line',section_heading:'verse_line',dedication:'verse_line'},
+    tabCycle:['verse_line','couplet','stanza_break','poem_title','epigraph','section_heading','dedication'],
+    placeholders:{poem_title:'Poem Title',stanza_break:'',verse_line:'',couplet:'',epigraph:'— Epigraph or attribution',section_heading:'I.',dedication:'For —'},
+    defaultFirst:'poem_title',defaultFirstText:''
+  }
+};
+
+let curScriptId=null,scriptLeftMode='docs',scriptSaveTimer=null;
+
+function getScriptDef(){const p=getCur();if(!p||!curScriptId)return BLOCK_DEFS.screenplay;const sc=getCurScript();return BLOCK_DEFS[sc?.format||'screenplay']||BLOCK_DEFS.screenplay;}
+function getCurScript(){const p=getCur();if(!p)return null;return(p.scripts||[]).find(s=>s.id===curScriptId)||null;}
+
+// ── SCRIPT CRUD ───────────────────────────────────────────────────────────────
+function addScript(){
+  const p=getCur();if(!p)return;
+  p.scripts=p.scripts||[];
+  const id='scr_'+Date.now();
+  // Pick default script format from project medium
+  const med=MEDIUMS.find(m=>m.id===p.format);
+  const fmt=med?.scriptFmt||'screenplay';
+  const def=BLOCK_DEFS[fmt]||BLOCK_DEFS.screenplay;
+  p.scripts.push({id,title:'Untitled Script',format:fmt,created:Date.now(),modified:Date.now(),
+    blocks:[{id:'bl_0',type:def.defaultFirst,text:def.defaultFirstText}]});
+  selectScript(id);renderScriptDocList();schedSave();
+}
+function selectScript(id){
+  curScriptId=id;const sc=getCurScript();if(!sc)return;
+  document.getElementById('script-fmt-sel').value=sc.format||'screenplay';
+  document.getElementById('script-title-input').value=sc.title||'';
+  const btn=document.getElementById('script-export-btn');
+  if(btn)btn.textContent=(sc.format==='novel'||sc.format==='poetry')?'Export .txt':'Export .fountain';
+  renderScriptPage();renderScriptDocList();renderScriptOutline();updateScriptStats();
+}
+function setScriptFormat(fmt){
+  const sc=getCurScript();if(!sc)return;sc.format=fmt;
+  const btn=document.getElementById('script-export-btn');
+  if(btn)btn.textContent=fmt==='novel'||fmt==='poetry'?'Export .txt':'Export .fountain';
+  renderScriptPage();schedSave();
+}
+function updateScriptTitle(val){const sc=getCurScript();if(!sc)return;sc.title=val;renderScriptDocList();schedSave();}
+function delCurScript(){
+  if(!confirm('Delete this script?'))return;
+  const p=getCur();p.scripts=(p.scripts||[]).filter(s=>s.id!==curScriptId);curScriptId=null;
+  renderScriptPage();renderScriptDocList();schedSave();
+}
+function renderScriptDocList(){
+  const p=getCur();const el=document.getElementById('script-doc-list');if(!el)return;el.innerHTML='';
+  (p.scripts||[]).forEach(sc=>{
+    const item=document.createElement('div');item.className='script-list-item'+(sc.id===curScriptId?' on':'');
+    item.innerHTML=`<div class="sli-title${sc.title?'':' empty'}">${e(sc.title||'Untitled')}</div><div class="sli-meta">${(sc.format||'screenplay').replace('_',' ')} · ${countScriptPages(sc)} pg</div>`;
+    item.onclick=()=>selectScript(sc.id);
+    el.appendChild(item);
+  });
+}
+function countScriptPages(sc){
+  if(!sc||!sc.blocks)return 0;
+  const words=sc.blocks.reduce((s,b)=>s+(b.text||'').split(/\s+/).filter(Boolean).length,0);
+  const fmt=sc.format||'screenplay';
+  if(fmt==='novel')return Math.max(1,Math.round(words/250));
+  if(fmt==='poetry')return sc.blocks.filter(b=>b.type==='poem_title').length||1;
+  return Math.max(1,Math.round(words/180));
+}
+
+// ── RENDER SCRIPT PAGE ────────────────────────────────────────────────────────
+function renderScriptPage(){
+  const page=document.getElementById('script-page');if(!page)return;
+  const sc=getCurScript();
+  if(!sc){page.innerHTML='<div style="color:#aaa;font-size:12pt;padding:40pt 0;text-align:center">No script selected</div>';return;}
+  const fmt=sc.format||'screenplay';
+  page.setAttribute('data-format',fmt);
+  const def=BLOCK_DEFS[fmt]||BLOCK_DEFS.screenplay;
+  page.innerHTML='';
+  (sc.blocks||[]).forEach((b,i)=>{
+    page.appendChild(makeBlockRow(b,i,def));
+  });
+  // Initial cursor on last block
+  setTimeout(()=>{const last=page.lastElementChild;if(last){const blk=last.querySelector('.script-block');if(blk)blk.focus();}},50);
+}
+
+function makeBlockRow(b,idx,def){
+  const row=document.createElement('div');row.className='sbr';row.dataset.bid=b.id;
+  const btn=document.createElement('button');btn.className='sb-type-btn';btn.textContent=def.labels[b.type]||'ACT';
+  btn.title=def.names[b.type]||b.type;
+  btn.onclick=(e)=>{e.preventDefault();e.stopPropagation();cycleBlockType(b.id);};
+  const blk=document.createElement('div');blk.className='script-block';blk.dataset.type=b.type;blk.dataset.bid=b.id;
+  blk.contentEditable='true';blk.textContent=b.text||'';
+  blk.dataset.placeholder=def.placeholders[b.type]||'';
+  blk.addEventListener('keydown',scriptKeydown);
+  blk.addEventListener('input',scriptInput);
+  blk.addEventListener('focus',scriptFocus);
+  row.appendChild(btn);row.appendChild(blk);
+  return row;
+}
+
+// ── KEYBOARD HANDLING ─────────────────────────────────────────────────────────
+function scriptKeydown(e){
+  const blk=this;const bid=blk.dataset.bid;
+  if(e.key==='Enter'&&!e.shiftKey){
+    e.preventDefault();
+    const sc=getCurScript();if(!sc)return;
+    const def=getScriptDef();
+    const curType=blk.dataset.type;
+    const nextType=def.nextType[curType]||'action';
+    // If text is empty and not first block — delete this block
+    if(!blk.textContent.trim()&&sc.blocks.length>1){
+      e.stopPropagation();deleteBlock(bid);return;
+    }
+    insertBlockAfter(bid,nextType,'');
+  }
+  if(e.key==='Tab'){
+    e.preventDefault();
+    const def=getScriptDef();
+    const cycle=def.tabCycle||['action','character','scene_heading'];
+    const cur=blk.dataset.type;
+    const idx=cycle.indexOf(cur);
+    const next=cycle[(idx+1)%cycle.length];
+    setBlockType(bid,next);
+  }
+  if(e.key==='Backspace'){
+    const sel=window.getSelection();
+    if(sel.anchorOffset===0&&sel.focusOffset===0){
+      const sc=getCurScript();if(!sc||sc.blocks.length<=1)return;
+      e.preventDefault();
+      mergeWithPrev(bid);
+    }
+  }
+  // Autocomplete navigation
+  const ac=document.getElementById('script-autocomplete');
+  if(ac&&ac.style.display!=='none'){
+    if(e.key==='ArrowDown'){e.preventDefault();acMove(1);}
+    if(e.key==='ArrowUp'){e.preventDefault();acMove(-1);}
+    if(e.key==='Escape'){hideAc();}
+    if(e.key==='Enter'&&acSelected()){e.preventDefault();acAccept();return;}
+  }
+}
+function scriptInput(e){
+  const blk=this;const bid=blk.dataset.bid;const text=blk.textContent;
+  const fmt=getCurScript()?.format||'screenplay';
+  // Screenplay/TV only auto-detection
+  if(fmt==='screenplay'||fmt==='tv'){
+    if(blk.dataset.type==='action'&&(text.startsWith('INT.')||text.startsWith('EXT.')||text.startsWith('INT/'))){setBlockType(bid,'scene_heading');}
+    if((blk.dataset.type==='action')&&/^(FADE|CUT|DISSOLVE|SMASH|MATCH)\s/.test(text)&&text.endsWith(':')){setBlockType(bid,'transition');}
+  }
+  // Novel: scene break auto-detect
+  if(fmt==='novel'&&blk.dataset.type==='prose'&&/^\*\s*\*\s*\*$|^---$|^###$/.test(text.trim())){setBlockType(bid,'scene_break');}
+  // Save content
+  saveBlockContent(bid,text);
+  // Autocomplete — only for screenplay/tv/stage/comic
+  if(fmt!=='novel'&&fmt!=='poetry'&&fmt!=='treatment')showAutocomplete(blk);
+  // Update outline + stats
+  clearTimeout(scriptSaveTimer);scriptSaveTimer=setTimeout(()=>{renderScriptOutline();updateScriptStats();schedSave();},400);
+}
+function scriptFocus(e){
+  const blk=this;const def=getScriptDef();
+  const name=def.names[blk.dataset.type]||blk.dataset.type;
+  const lbl=document.getElementById('script-type-label');if(lbl)lbl.textContent=name;
+  // Show type button
+  document.querySelectorAll('.sb-type-btn').forEach(b=>b.style.opacity='0');
+  const row=blk.closest('.sbr');if(row){const btn=row.querySelector('.sb-type-btn');if(btn)btn.style.opacity='1';}
+  hideAc();
+}
+
+// ── BLOCK OPERATIONS ─────────────────────────────────────────────────────────
+function saveBlockContent(bid,text){const sc=getCurScript();if(!sc)return;const b=sc.blocks.find(x=>x.id===bid);if(b)b.text=text;}
+function setBlockType(bid,type){
+  const sc=getCurScript();if(!sc)return;
+  const def=getScriptDef();
+  const b=sc.blocks.find(x=>x.id===bid);if(!b)return;
+  b.type=type;
+  // Update DOM
+  const blk=document.querySelector(`.script-block[data-bid="${bid}"]`);
+  const btn=blk?.closest('.sbr')?.querySelector('.sb-type-btn');
+  if(blk){blk.dataset.type=type;blk.dataset.placeholder=def.placeholders[type]||'';}
+  if(btn){btn.textContent=def.labels[type]||'';btn.title=def.names[type]||type;}
+  const lbl=document.getElementById('script-type-label');if(lbl)lbl.textContent=def.names[type]||type;
+}
+function cycleBlockType(bid){
+  const def=getScriptDef();const sc=getCurScript();if(!sc)return;
+  const b=sc.blocks.find(x=>x.id===bid);if(!b)return;
+  const cycle=def.tabCycle||['action'];const idx=cycle.indexOf(b.type);
+  setBlockType(bid,cycle[(idx+1)%cycle.length]);
+}
+function insertBlockAfter(bid,type,text){
+  const sc=getCurScript();if(!sc)return;
+  const idx=sc.blocks.findIndex(x=>x.id===bid);
+  const newId='bl_'+Date.now();
+  const newB={id:newId,type,text:text||''};
+  sc.blocks.splice(idx+1,0,newB);
+  // Re-render efficiently: insert DOM row
+  const def=getScriptDef();
+  const refRow=document.querySelector(`.sbr[data-bid="${bid}"]`);
+  if(refRow){
+    const newRow=makeBlockRow(newB,idx+1,def);
+    refRow.after(newRow);
+    setTimeout(()=>{const nb=newRow.querySelector('.script-block');if(nb){nb.focus();moveCursorToEnd(nb);}},10);
+  } else renderScriptPage();
+  schedSave();
+}
+function deleteBlock(bid){
+  const sc=getCurScript();if(!sc||sc.blocks.length<=1)return;
+  const idx=sc.blocks.findIndex(x=>x.id===bid);if(idx<0)return;
+  const prevId=idx>0?sc.blocks[idx-1].id:sc.blocks[1].id;
+  sc.blocks.splice(idx,1);
+  const row=document.querySelector(`.sbr[data-bid="${bid}"]`);if(row)row.remove();
+  const prevBlk=document.querySelector(`.script-block[data-bid="${prevId}"]`);
+  if(prevBlk){prevBlk.focus();moveCursorToEnd(prevBlk);}
+  schedSave();
+}
+function mergeWithPrev(bid){
+  const sc=getCurScript();if(!sc)return;
+  const idx=sc.blocks.findIndex(x=>x.id===bid);if(idx<=0)return;
+  const prev=sc.blocks[idx-1];const cur=sc.blocks[idx];
+  const prevBlk=document.querySelector(`.script-block[data-bid="${prev.id}"]`);
+  const curLen=prev.text.length;
+  prev.text=(prev.text||'')+(cur.text||'');
+  sc.blocks.splice(idx,1);
+  const row=document.querySelector(`.sbr[data-bid="${bid}"]`);if(row)row.remove();
+  if(prevBlk){prevBlk.textContent=prev.text;prevBlk.focus();setCaretAt(prevBlk,curLen);}
+  schedSave();
+}
+function moveCursorToEnd(el){const r=document.createRange();const s=window.getSelection();r.selectNodeContents(el);r.collapse(false);s.removeAllRanges();s.addRange(r);}
+function setCaretAt(el,pos){const r=document.createRange();const s=window.getSelection();const node=el.firstChild;if(node){r.setStart(node,Math.min(pos,node.textContent.length));r.collapse(true);s.removeAllRanges();s.addRange(r);}else moveCursorToEnd(el);}
+
+// ── AUTOCOMPLETE ──────────────────────────────────────────────────────────────
+let acItems=[],acIdx=-1;
+function showAutocomplete(blk){
+  const type=blk.dataset.type;const text=blk.textContent;
+  const p=getCur();if(!p)return;
+  let candidates=[];
+  if(type==='character'){candidates=(p.characters||[]).map(c=>c.name||'').filter(n=>n&&n.toLowerCase().startsWith(text.toLowerCase())&&n.toLowerCase()!==text.toLowerCase());}
+  else if(type==='scene_heading'){candidates=(p.settings||[]).map(s=>s.name||'').filter(n=>n&&n.toLowerCase().includes(text.toLowerCase())&&n.toLowerCase()!==text.toLowerCase()).map(n=>'INT. '+n.toUpperCase()+' — DAY');}
+  else{hideAc();return;}
+  if(!candidates.length){hideAc();return;}
+  acItems=candidates;acIdx=-1;
+  let ac=document.getElementById('script-autocomplete');
+  if(!ac){ac=document.createElement('div');ac.id='script-autocomplete';ac.className='script-autocomplete';document.body.appendChild(ac);}
+  ac.innerHTML=candidates.slice(0,8).map((c,i)=>`<div class="sac-item" data-idx="${i}" onmousedown="acSelect(${i})">${e(c)}</div>`).join('');
+  const rect=blk.getBoundingClientRect();
+  ac.style.cssText=`display:block;top:${rect.bottom+window.scrollY+2}px;left:${rect.left+window.scrollX}px;position:absolute`;
+}
+function hideAc(){const ac=document.getElementById('script-autocomplete');if(ac)ac.style.display='none';acIdx=-1;}
+function acMove(dir){acIdx=Math.max(-1,Math.min(acItems.length-1,acIdx+dir));document.querySelectorAll('.sac-item').forEach((el,i)=>el.classList.toggle('on',i===acIdx));}
+function acSelected(){return acIdx>=0&&acIdx<acItems.length;}
+function acSelect(i){const blk=document.querySelector('.script-block:focus');if(!blk)return;blk.textContent=acItems[i];saveBlockContent(blk.dataset.bid,acItems[i]);moveCursorToEnd(blk);hideAc();}
+function acAccept(){if(acSelected())acSelect(acIdx);}
+
+// ── OUTLINE ────────────────────────────────────────────────────────────────────
+function renderScriptOutline(){
+  const sc=getCurScript();const el=document.getElementById('script-outline');if(!el)return;el.innerHTML='';
+  if(!sc){el.innerHTML='<div style="padding:10px 14px;font-size:10px;color:var(--txt3)">No script selected</div>';return;}
+  const headingTypes=new Set(['scene_heading','act_heading','act_break','cold_open','page_heading','panel_heading','chapter_heading','poem_title','section_heading']);
+  (sc.blocks||[]).forEach(b=>{
+    if(!headingTypes.has(b.type)||!b.text.trim())return;
+    const item=document.createElement('div');
+    const isAct=['act_heading','act_break','cold_open'].includes(b.type);
+    const isChapter=['chapter_heading','poem_title'].includes(b.type);
+    const isSub=['section_heading','panel_heading','page_heading'].includes(b.type);
+    item.className='outline-item'+(isAct?' act':isChapter?' act':isSub?' page-hd':'');
+    item.textContent=b.text.trim();
+    item.onclick=()=>{const blk=document.querySelector(`.script-block[data-bid="${b.id}"]`);if(blk){blk.scrollIntoView({behavior:'smooth',block:'center'});blk.focus();}};
+    el.appendChild(item);
+  });
+  if(!el.children.length)el.innerHTML='<div style="padding:10px 14px;font-size:10px;color:var(--txt3)">No headings yet</div>';
+}
+function swScriptLeft(mode){
+  scriptLeftMode=mode;
+  document.getElementById('script-doc-list').style.display=mode==='docs'?'block':'none';
+  document.getElementById('script-outline').style.display=mode==='outline'?'block':'none';
+  document.getElementById('slt-docs').classList.toggle('on',mode==='docs');
+  document.getElementById('slt-outline').classList.toggle('on',mode==='outline');
+  if(mode==='outline')renderScriptOutline();
+}
+
+// ── STATS ─────────────────────────────────────────────────────────────────────
+function updateScriptStats(){
+  const sc=getCurScript();const el=document.getElementById('script-stats');const expBtn=document.getElementById('script-export-btn');if(!el)return;
+  if(!sc){el.textContent='0 words';if(expBtn)expBtn.textContent='Export';return;}
+  const words=sc.blocks.reduce((s,b)=>s+(b.text||'').split(/\s+/).filter(Boolean).length,0);
+  const fmt=sc.format||'screenplay';
+  if(fmt==='novel'){const pages=Math.max(1,Math.round(words/250));el.textContent=`~${pages} pg · ${words.toLocaleString()} words`;if(expBtn)expBtn.textContent='Export .txt';}
+  else if(fmt==='poetry'){const poems=sc.blocks.filter(b=>b.type==='poem_title').length;const lines=sc.blocks.filter(b=>b.type==='verse_line'||b.type==='couplet').length;el.textContent=`${poems} poem${poems!==1?'s':''} · ${lines} lines`;if(expBtn)expBtn.textContent='Export .txt';}
+  else{const pages=Math.max(1,Math.round(words/180));el.textContent=`~${pages} pg · ${words} words`;if(expBtn)expBtn.textContent='Export .fountain';}
+}
+
+// ── EXPORT ─────────────────────────────────────────────────────────────────────
+function printScript(){
+  const sc=getCurScript();if(!sc)return;
+  const tgt=document.getElementById('print-script-target');
+  const pageSrc=document.getElementById('script-page');
+  if(!tgt||!pageSrc)return;
+  tgt.innerHTML=`<div class="script-page" data-format="${sc.format||'screenplay'}" style="margin:0;box-shadow:none;max-width:100%;padding:1in 1in 1in 1.5in">${pageSrc.innerHTML}</div>`;
+  tgt.style.display='block';
+  window.print();
+  setTimeout(()=>{tgt.style.display='none';tgt.innerHTML='';},1000);
+}
+function exportFountain(){
+  const sc=getCurScript();if(!sc)return;
+  const fmt=sc.format||'screenplay';
+  // Novel — export as plain text with chapter markers
+  if(fmt==='novel'){
+    const NOVEL_MAP={chapter_heading:t=>'\n\n'+t.toUpperCase()+'\n\n',scene_break:t=>'\n\n'+t+'\n\n',prose:t=>'\n    '+t,block_quote:t=>'\n\n    "'+t+'"\n',author_note:t=>'\n['+t+']\n'};
+    const text=(sc.blocks||[]).map(b=>(NOVEL_MAP[b.type]||(t=>'\n'+t))(b.text||'')).join('');
+    const a=document.createElement('a');a.download=(sc.title||'novel').replace(/[^a-z0-9]/gi,'_').toLowerCase()+'.txt';
+    a.href='data:text/plain;charset=utf-8,'+encodeURIComponent(text.trim());a.click();return;
+  }
+  // Poetry — export as plain text preserving line breaks
+  if(fmt==='poetry'){
+    const POE_MAP={poem_title:t=>t.toUpperCase()+'\n\n',verse_line:t=>t+'\n',couplet:t=>t+'\n',stanza_break:()=>'\n',epigraph:t=>t+'\n\n',section_heading:t=>'\n'+t+'\n\n',dedication:t=>t+'\n\n'};
+    const text=(sc.blocks||[]).map(b=>(POE_MAP[b.type]||(t=>t+'\n'))(b.text||'')).join('');
+    const a=document.createElement('a');a.download=(sc.title||'poetry').replace(/[^a-z0-9]/gi,'_').toLowerCase()+'.txt';
+    a.href='data:text/plain;charset=utf-8,'+encodeURIComponent(text.trim());a.click();return;
+  }
+  // All other formats — Fountain format
+  const FOUNTAIN_MAP={scene_heading:t=>'\n'+t.toUpperCase(),action:t=>'\n'+t,character:t=>'\n'+t.toUpperCase(),parenthetical:t=>' '+t,dialogue:t=>t,transition:t=>'\n'+t.toUpperCase()+'\n',shot:t=>'\n'+t,act_break:t=>'\n\n'+t.toUpperCase()+'\n',cold_open:t=>'\n'+t,page_heading:t=>'\n===\n'+t,panel_heading:t=>'\n'+t,panel_action:t=>'\n'+t,caption:t=>'> '+t,sfx:t=>t,stage_direction:t=>'\n('+t+')',act_heading:t=>'\n# '+t,treatment_action:t=>'\n'+t};
+  const text=(sc.blocks||[]).map(b=>(FOUNTAIN_MAP[b.type]||(t=>'\n'+t))(b.text||'')).join('\n');
+  const a=document.createElement('a');a.download=(sc.title||'script').replace(/[^a-z0-9]/gi,'_').toLowerCase()+'.fountain';
+  a.href='data:text/plain;charset=utf-8,'+encodeURIComponent(text);a.click();
+}
+
+// ── NOTES ─────────────────────────────────────────────────────────────────────
+function renderNotes(){
+  const p=getCur();const area=document.getElementById('notes-area');if(!area||!p)return;
+  const n=p.notes||{};
+  area.innerHTML=`
+    <div class="nblock"><div class="ntitle">World Building</div><textarea class="ni" id="n-world" oninput="upNote('world',this.value)">${e(n.world||'')}</textarea></div>
+    <div class="nblock"><div class="ntitle">Thematic Core</div><textarea class="ni" id="n-theme" oninput="upNote('theme',this.value)">${e(n.theme||'')}</textarea></div>
+    <div class="nblock"><div class="ntitle">Visual Language</div><textarea class="ni" id="n-visual" oninput="upNote('visual',this.value)">${e(n.visual||'')}</textarea></div>
+    <div class="nblock"><div class="ntitle">Key Decisions Locked</div><textarea class="ni" id="n-dec" oninput="upNote('decisions',this.value)">${e(n.decisions||'')}</textarea></div>
+    <div class="nblock full"><div class="ntitle">Open Questions</div><textarea class="ni" id="n-q" style="min-height:90px" oninput="upNote('questions',this.value)">${e(n.questions||'')}</textarea></div>`;
+}
+function upNote(k,val){const p=getCur();if(p){p.notes=p.notes||{};p.notes[k]=val;schedSave();}}
+
+// ── GOOGLE DRIVE ──────────────────────────────────────────────────────────────
+function initTokenClient(){
+  const cid=settings.googleClientId;if(!cid)return;
+  if(typeof google==='undefined'||!google.accounts)return;
+  tokenClient=google.accounts.oauth2.initTokenClient({client_id:cid,scope:'https://www.googleapis.com/auth/drive.file',callback:resp=>{if(resp.error){setDriveStatus('error','Auth failed');return;}gToken=resp.access_token;setTimeout(()=>{gToken=null;setDriveStatus('disconnected','Reconnect Drive');},((resp.expires_in||3600)-60)*1000);setDriveStatus('connected','Drive Connected');}});
+}
+function driveAction(){if(!settings.googleClientId){alert('Enter your Google Client ID in Settings first.');showSettings();return;}if(!gToken){if(!tokenClient)initTokenClient();if(tokenClient)tokenClient.requestAccessToken();else alert('Google Identity Services not loaded. Serve Ferdowsi from localhost.');return;}syncToDrive();}
+function setDriveStatus(state,label){const dot=document.getElementById('drive-dot');const lbl=document.getElementById('drive-lbl');if(dot)dot.className='drive-dot '+state;if(lbl)lbl.textContent=label;}
+async function syncToDrive(){
+  if(!gToken){alert('Not connected to Drive.');return;}
+  const p=getCur();if(!p)return;
+  setDriveStatus('syncing','Syncing…');
+  const content=JSON.stringify(p);const filename='ferdowsi_'+p.name.replace(/[^a-z0-9]/gi,'_').toLowerCase()+'.json';
+  try{
+    if(p.driveFileId){
+      await fetch(`https://www.googleapis.com/upload/drive/v3/files/${p.driveFileId}?uploadType=media`,{method:'PATCH',headers:{'Authorization':'Bearer '+gToken,'Content-Type':'application/json'},body:content});
+    }else{
+      const form=new FormData();
+      form.append('metadata',new Blob([JSON.stringify({name:filename,mimeType:'application/json'})],{type:'application/json'}));
+      form.append('file',new Blob([content],{type:'application/json'}));
+      const r=await fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart',{method:'POST',headers:{'Authorization':'Bearer '+gToken},body:form});
+      const d=await r.json();p.driveFileId=d.id;saveAllProjects();
+    }
+    p.modified=Date.now();saveAllProjects();setDriveStatus('connected','Synced ✓');
+    setTimeout(()=>setDriveStatus('connected','Drive Connected'),2000);
+  }catch(err){setDriveStatus('error','Sync Failed');console.error(err);}
+}
+async function importFromDrive(){
+  if(!gToken){if(!settings.googleClientId){alert('Set up Google Drive in Settings first.');showSettings();return;}if(!tokenClient)initTokenClient();if(tokenClient){tokenClient.requestAccessToken();return;}return;}
+  try{
+    const r=await fetch("https://www.googleapis.com/drive/v3/files?q=name+contains+'ferdowsi_'+and+mimeType='application/json'&fields=files(id,name,modifiedTime)&orderBy=modifiedTime+desc",{headers:{'Authorization':'Bearer '+gToken}});
+    const d=await r.json();const files=d.files||[];
+    if(!files.length){alert('No Ferdowsi project files found in Drive.');return;}
+    const chosen=files.length===1?files[0]:files[prompt('Drive files found:\n'+files.map((f,i)=>`${i}: ${f.name}`).join('\n')+'\n\nEnter number:')];
+    if(!chosen)return;
+    const fr=await fetch(`https://www.googleapis.com/drive/v3/files/${chosen.id}?alt=media`,{headers:{'Authorization':'Bearer '+gToken}});
+    const proj=await fr.json();if(!proj.id)proj.id='proj_'+Date.now();
+    const existing=projects.findIndex(pp=>pp.driveFileId===chosen.id||pp.id===proj.id);
+    if(existing>=0)projects[existing]=proj;else projects.push(proj);
+    saveAllProjects();switchProject(proj.id);renderProjPanel();
+  }catch(err){alert('Import failed: '+err.message);}
+}
+async function exportToGoogleDocs(){
+  if(!gToken){alert('Connect to Google Drive first (click "Connect Drive" in the header).');return;}
+  const p=getCur();if(!p)return;
+  const chars=(p.characters||[]).map(c=>`<h3>${c.name||'Unnamed'}</h3><p><strong>Role:</strong> ${c.role||'—'}</p><p><strong>Arc:</strong> ${c.arc||'—'}</p><p><strong>Relationships:</strong> ${c.rels||'—'}</p><p><strong>Notes:</strong></p><p>${(c.notes||'').replace(/\n/g,'<br>')}</p><hr>`).join('');
+  const locs=(p.settings||[]).map(l=>`<h3>${l.name||'Unnamed Setting'}</h3><p><strong>Type:</strong> ${l.type||'—'} &nbsp;|&nbsp; <strong>Scenes:</strong> ${l.scenes||'—'}</p>${l.timeOfDay?`<p><strong>Time:</strong> ${l.timeOfDay} &nbsp;|&nbsp; <strong>Weather:</strong> ${l.weather||'—'} &nbsp;|&nbsp; <strong>Season/Era:</strong> ${l.season||'—'}</p>`:''}<p>${l.description||''}</p><p><strong>Significance:</strong> ${l.significance||'—'}</p>${l.atmosphere?`<p><em>Atmosphere: ${l.atmosphere}</em></p>`:''}<hr>`).join('');
+  const struct=(p.structure||[]).map(u=>`<h2>${u.title}</h2><p><em>${u.desc||''}</em></p>${(u.scenes||[]).map(s=>`<p><strong>${s.loc||'—'}</strong> / ${s.chars||'—'}<br>${s.notes||''}</p>`).join('')}`).join('');
+  const html=`<html><head><meta charset="UTF-8"></head><body>
+    <h1>${p.name}</h1><p><em>${FORMAT_LABELS[p.format]||p.format}${p.genre?' · '+p.genre:''}</em></p>
+    <h2>Logline</h2><p>${p.logline||'—'}</p>
+    <h2>Characters</h2>${chars}
+    <h2>Settings</h2>${locs}
+    <h2>Story Structure</h2>${struct}
+    <h2>Notes</h2>
+    ${Object.entries(p.notes||{}).map(([k,v])=>v?`<h3>${k.charAt(0).toUpperCase()+k.slice(1)}</h3><p>${v.replace(/\n/g,'<br>')}</p>`:'').join('')}
+  </body></html>`;
+  try{
+    const form=new FormData();
+    form.append('metadata',new Blob([JSON.stringify({name:p.name+' — Story Bible',mimeType:'application/vnd.google-apps.document'})],{type:'application/json'}));
+    form.append('file',new Blob([html],{type:'text/html'}));
+    const r=await fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart',{method:'POST',headers:{'Authorization':'Bearer '+gToken},body:form});
+    const d=await r.json();
+    if(d.id)window.open('https://docs.google.com/document/d/'+d.id+'/edit','_blank');
+    else throw new Error('No file ID returned');
+  }catch(err){alert('Export failed: '+err.message);}
+}
+
+// ── TABS ──────────────────────────────────────────────────────────────────────
+const TABS=['characters','settings','vehicles','weapons','scenes','structure','script','storyboard','biblecheck','notes'];
+function sw(tab){
+  TABS.forEach(t=>document.getElementById('tab-'+t).style.display=t===tab?'block':'none');
+  document.querySelectorAll('.tab').forEach((el,i)=>el.classList.toggle('on',TABS[i]===tab));
+  if(tab==='storyboard')setTimeout(()=>{initSb();restoreSbPage();renderSbThumbs();},30);
+  if(tab==='settings')renderSettingGrid();
+  if(tab==='vehicles')renderVehicleGrid();
+  if(tab==='weapons')renderWeaponGrid();
+  if(tab==='scenes'){renderSceneList();if(curSceneId)selectScene(curSceneId);}
+  if(tab==='biblecheck')setTimeout(runBibleCheck,50);
+  if(tab==='script'){renderScriptDocList();const p=getCur();if(!curScriptId&&p&&p.scripts&&p.scripts.length)selectScript(p.scripts[0].id);else if(curScriptId)selectScript(curScriptId);}
+}
+
+// ── MODAL HELPERS ─────────────────────────────────────────────────────────────
+function showModal(id){document.getElementById(id).classList.add('show');}
+function closeModal(id){document.getElementById(id).classList.remove('show');}
+function closeModalOutside(ev,id){if(ev.target.classList.contains('modal-overlay'))closeModal(id);}
+
+// ── INIT ──────────────────────────────────────────────────────────────────────
+function runSplash(cb){
+  const word=document.getElementById('splash-word');
+  const letters='FERDOWSI'.split('');
+  const accentIdx=1; // E
+  word.innerHTML='';
+  letters.forEach((l,i)=>{
+    const span=document.createElement('span');
+    span.className='splash-letter'+(i===accentIdx?' splash-accent':'');
+    span.textContent=l;
+    // Stagger each letter 55ms apart, starting at 120ms
+    span.style.animationDelay=(120+i*55)+'ms';
+    word.appendChild(span);
+  });
+  // Sub and line stagger after letters
+  const sub=document.querySelector('.splash-sub');
+  const line=document.querySelector('.splash-line');
+  const totalLetterDelay=120+(letters.length-1)*55+550;
+  if(sub)sub.style.animationDelay=totalLetterDelay+'ms';
+  if(line)line.style.animationDelay=(totalLetterDelay-100)+'ms';
+  // Hold, then fade out
+  const holdTime=totalLetterDelay+520;
+  setTimeout(()=>{
+    const s=document.getElementById('splash');
+    if(s){
+      s.classList.add('hiding');
+      setTimeout(()=>{s.style.display='none';if(cb)cb();},600);
+    }else{if(cb)cb();}
+  },holdTime);
+}
+
+function init(){
+  loadSettings();loadProjects();
+  switchProject(currentId);
+  setTimeout(()=>{if(settings.googleClientId&&typeof google!=='undefined'&&google.accounts)initTokenClient();},1500);
+  runSplash();
+}
+window.addEventListener('load',init);
+document.addEventListener('input',ev=>{const ta=ev.target;if(ta.tagName==='INPUT'||ta.tagName==='TEXTAREA'||ta.tagName==='SELECT'){if(!ta.id||!['set-ak','set-gcid','np-name','np-format','np-genre','np-logline','np-length'].includes(ta.id))schedSave();}});
+</script>
+</body>
+</html>
